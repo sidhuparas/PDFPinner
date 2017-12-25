@@ -28,6 +28,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,14 +42,15 @@ import droidninja.filepicker.FilePickerConst;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button chooseBtn, pinFiles;
+    private Button chooseBtn, pinFiles, btnPDF1,btnPDF2;
     private RadioButton blue,red;
     private ArrayList<String> docPaths = new ArrayList<>();
     private ArrayList<ListItem> listItems = new ArrayList<>();
     private int image;
     private RecyclerView file_list;
     private DataAdapter dataAdapter;
-    private TextView info, pinInfo;
+    private TextView info, pinInfo, centerInfo;
+    private RadioGroup radios;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //Shows the choose files picker
     private void choosePDF() {
         String[] pdf = {".pdf"};
         FilePickerBuilder.getInstance()
@@ -114,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Initializes all the mess. btnPDFx represents both icons.
     private void initViews() {
         chooseBtn = findViewById(R.id.chooseBtn);
         file_list = findViewById(R.id.file_list);
@@ -130,7 +134,11 @@ public class MainActivity extends AppCompatActivity {
         });
         info = findViewById(R.id.info);
         pinInfo = findViewById(R.id.pinInfo);
-
+        radios = findViewById(R.id.radios);
+        btnPDF1 = findViewById(R.id.btnPDF1);
+        btnPDF2 = findViewById(R.id.btnPDF2);
+        centerInfo = findViewById(R.id.centerInfo);
+        toggle(0);
         pinFiles.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -148,6 +156,23 @@ public class MainActivity extends AppCompatActivity {
                 else image=R.drawable.pdf2;
             }
         });
+    }
+
+    //Custom toggle to set views' visibility
+    private void toggle(int val){
+        if (val==0) {
+            radios.setVisibility(View.GONE);
+            btnPDF1.setVisibility(View.GONE);
+            btnPDF2.setVisibility(View.GONE);
+            pinFiles.setVisibility(View.GONE);
+            centerInfo.setVisibility(View.VISIBLE);
+        }else {
+            radios.setVisibility(View.VISIBLE);
+            btnPDF1.setVisibility(View.VISIBLE);
+            btnPDF2.setVisibility(View.VISIBLE);
+            pinFiles.setVisibility(View.VISIBLE);
+            centerInfo.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -169,18 +194,24 @@ public class MainActivity extends AppCompatActivity {
         addDataToList(listItems);
     }
 
+    //Adds the selected PDFs to RecyclerView
     private void addDataToList(ArrayList<ListItem> listItems) {
-
         dataAdapter = new DataAdapter(this, listItems);
         file_list.setAdapter(dataAdapter);
         if(isOreo())
             info.setVisibility(View.VISIBLE);
         pinInfo.setVisibility(View.VISIBLE);
+        if(listItems.size()!=0)
+            toggle(1);
+        else {
+            toggle(0);
+            info.setVisibility(View.GONE);
+            pinInfo.setVisibility(View.GONE);
+        }
     }
 
     private void addShortcut(String path1, String pdfName) {
         File file = new File(path1);
-
         if (file.exists()) {
             Uri path = Uri.fromFile(file);
             Intent shortcutIntent = new Intent(Intent.ACTION_VIEW);
@@ -202,12 +233,9 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT > 25) {
             ShortcutManager shortcutManager;
             shortcutManager = getSystemService(ShortcutManager.class);
-            if(blue.isChecked()) {
+            if(blue.isChecked())
                 image = R.drawable.pdf;
-                Toast.makeText(this, "blue", Toast.LENGTH_SHORT).show();
-            }
-            else {image=R.drawable.pdf2;
-                Toast.makeText(this, "Red", Toast.LENGTH_SHORT).show();}
+            else image=R.drawable.pdf2;
             ShortcutInfo shortcut = new ShortcutInfo.Builder(this, pdfName)
                     .setShortLabel(pdfName)
                     .setLongLabel(pdfName)
