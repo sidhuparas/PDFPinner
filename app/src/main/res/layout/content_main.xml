@@ -11,7 +11,8 @@
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -42,12 +43,23 @@
                 android:layout_marginTop="15dp" />
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:id="@+id/centerInfo"
+                android:text="Select some files to get started..."
+                android:fontFamily="sans-serif-light"
+                android:textSize="20sp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp" />
+
+            <TextView
                 android:id="@+id/info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/btnPDF1"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="12dp"
                 android:layout_marginRight="10dp"
                 android:text="INFORMATION: Since you're using Android 8.0 or higher, you need to pin shortcuts one-by-one due to restriction by the OS."
                 android:visibility="gone" />
@@ -57,12 +69,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/file_list"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
                 android:orientation="horizontal">
 
                 <RadioButton
                     android:id="@+id/blueIcon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="16sp"
                     android:layout_marginRight="50dp"
                     android:checked="true"
                     android:text="Blue Icon" />
@@ -70,6 +85,7 @@
                 <RadioButton
                     android:id="@+id/redIcon"
                     android:layout_width="wrap_content"
+                    android:textSize="16sp"
                     android:layout_height="wrap_content"
                     android:text="Red Icon" />
             </RadioGroup>
@@ -80,6 +96,7 @@
                 android:layout_height="84dp"
                 android:layout_below="@id/radios"
                 android:layout_marginTop="10dp"
+                android:layout_marginLeft="2dp"
                 android:background="@drawable/pdf" />
 
             <Button
@@ -87,8 +104,8 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_below="@id/radios"
-                android:layout_marginLeft="50dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginTop="12dp"
                 android:layout_toRightOf="@id/btnPDF1"
                 android:background="@drawable/pdf2" />
 
@@ -100,7 +117,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:background="@color/colorPrimary"
                 android:elevation="5dp"
                 android:text="Pin File(s)"
@@ -114,7 +131,7 @@
                 android:layout_below="@id/pinFiles"
                 android:id="@+id/pinInfo"
                 android:visibility="gone"
-                android:layout_margin="10dp"/>
+                android:layout_margin="12dp"/>
 
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
