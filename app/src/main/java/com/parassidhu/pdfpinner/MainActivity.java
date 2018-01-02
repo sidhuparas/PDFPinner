@@ -142,10 +142,18 @@ public class MainActivity extends AppCompatActivity {
         pinFiles.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (int i = 0; i < listItems.size(); i++) {
-                    addShortcut(listItems.get(i).getPath(), listItems.get(i).getName());
+                if (!isOreo()) {
+                    for (int i = 0; i < listItems.size(); i++) {
+                        addShortcut(listItems.get(i).getPath(), listItems.get(i).getName());
+                    }
+                    Toast.makeText(MainActivity.this, "Success!", Toast.LENGTH_SHORT).show();
+                }else {
+                    int num=0;
+                    if (listItems.size()>1) {
+                        pinFiles.setText("Pin Next File");
+                        addShortcutInOreo(listItems.get(num).getPath(), listItems.get(num).getName());
+                    }
                 }
-                Toast.makeText(MainActivity.this, "Process finished!", Toast.LENGTH_SHORT).show();
             }
         });
         blue.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -226,24 +234,31 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Some error occurred!", Toast.LENGTH_SHORT).show();
         }
+    }
 
-        Intent pdfIntent = new Intent(Intent.ACTION_VIEW);
-        pdfIntent.setDataAndType(Uri.fromFile(file),"application/pdf");
+    private void addShortcutInOreo(String path1, String pdfName){
+        try {
+            File file = new File(path1);
+            Intent pdfIntent = new Intent(Intent.ACTION_VIEW);
+            pdfIntent.setDataAndType(Uri.fromFile(file), "application/pdf");
 
-        if (Build.VERSION.SDK_INT > 25) {
-            ShortcutManager shortcutManager;
-            shortcutManager = getSystemService(ShortcutManager.class);
-            if(blue.isChecked())
-                image = R.drawable.pdf;
-            else image=R.drawable.pdf2;
-            ShortcutInfo shortcut = new ShortcutInfo.Builder(this, pdfName)
-                    .setShortLabel(pdfName)
-                    .setLongLabel(pdfName)
-                    .setIcon(Icon.createWithResource(this,image))
-                    .setIntent(pdfIntent)
-                    .build();
+            if (Build.VERSION.SDK_INT > 25) {
+                ShortcutManager shortcutManager;
+                shortcutManager = getSystemService(ShortcutManager.class);
+                if (blue.isChecked())
+                    image = R.drawable.pdf;
+                else image = R.drawable.pdf2;
+                ShortcutInfo shortcut = new ShortcutInfo.Builder(this, pdfName)
+                        .setShortLabel(pdfName)
+                        .setLongLabel(pdfName)
+                        .setIcon(Icon.createWithResource(this, image))
+                        .setIntent(pdfIntent)
+                        .build();
 
-            shortcutManager.requestPinShortcut(shortcut,null);
+                shortcutManager.requestPinShortcut(shortcut, null);
+            }
+        }catch (Exception e){
+            Toast.makeText(this, "Some error occurred: "+e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
