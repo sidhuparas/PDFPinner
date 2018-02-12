@@ -3,119 +3,170 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/white"
     android:layout_height="match_parent"
+    android:background="@color/white"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.parassidhu.pdfpinner.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <android.support.v4.widget.NestedScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <RelativeLayout
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white">
+            android:layout_weight="2"
+            android:fillViewport="true">
 
-            <Button
-                android:id="@+id/chooseBtn"
-                android:layout_width="216dp"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="20dp"
-                android:background="@color/blue"
-                android:elevation="5dp"
-                android:text="Choose File(s)"
-                android:textColor="@drawable/tab_white"
-                android:textSize="18sp" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/file_list"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/chooseBtn"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="15dp" />
+                android:layout_height="match_parent"
+                android:background="@color/white">
 
-            <TextView
-                android:id="@+id/info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/btnPDF1"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:text="INFORMATION: Since you're using Android 8.0 or higher, you need to pin shortcuts one-by-one due to restriction by the OS."
-                android:visibility="gone" />
+                <Button
+                    android:id="@+id/chooseBtn"
+                    android:layout_width="216dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/blue"
+                    android:elevation="5dp"
+                    android:text="Choose File(s)"
+                    android:textColor="@drawable/tab_white"
+                    android:textSize="18sp" />
 
-            <RadioGroup
-                android:id="@+id/radios"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/file_list"
-                android:orientation="horizontal">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/file_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/chooseBtn"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="15dp" />
 
-                <RadioButton
-                    android:id="@+id/blueIcon"
+                <TextView
+                    android:id="@+id/centerInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="50dp"
-                    android:checked="true"
-                    android:text="Blue Icon" />
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Select some files to get started..."
+                    android:textSize="20sp" />
 
-                <RadioButton
-                    android:id="@+id/redIcon"
+                <TextView
+                    android:id="@+id/info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/dev"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:text="INFORMATION: Since you're using Android 8.0 or higher, you need to pin shortcuts one-by-one due to restriction by the OS."
+                    android:visibility="gone" />
+
+                <RelativeLayout
+                    android:id="@+id/iconGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Red Icon" />
-            </RadioGroup>
+                    android:layout_below="@id/file_list"
+                    android:layout_centerHorizontal="true">
 
-            <Button
-                android:id="@+id/btnPDF1"
-                android:layout_width="84dp"
-                android:layout_height="84dp"
-                android:layout_below="@id/radios"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/pdf" />
+                    <RadioGroup
+                        android:id="@+id/radios"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btnPDF2"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_below="@id/radios"
-                android:layout_marginLeft="50dp"
-                android:layout_marginTop="10dp"
-                android:layout_toRightOf="@id/btnPDF1"
-                android:background="@drawable/pdf2" />
+                        <RadioButton
+                            android:id="@+id/blueIcon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="50dp"
+                            android:checked="true"
+                            android:text="Blue Icon"
+                            android:textSize="16sp" />
 
-            <Button
-                android:id="@+id/pinFiles"
-                android:layout_width="216dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/info"
-                android:layout_centerHorizontal="true"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="20dp"
-                android:background="@color/colorPrimary"
-                android:elevation="5dp"
-                android:text="Pin File(s)"
-                android:textColor="@drawable/tab_white"
-                android:textSize="18sp" />
+                        <RadioButton
+                            android:id="@+id/redIcon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Red Icon"
+                            android:textSize="16sp" />
+                    </RadioGroup>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Please note that you can't pin same shortcut twice with different icons."
-                android:layout_below="@id/pinFiles"
-                android:id="@+id/pinInfo"
-                android:visibility="gone"
-                android:layout_margin="10dp"/>
+                    <Button
+                        android:id="@+id/btnPDF1"
+                        android:layout_width="84dp"
+                        android:layout_height="84dp"
+                        android:layout_below="@id/radios"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/pdf" />
 
-        </RelativeLayout>
-    </android.support.v4.widget.NestedScrollView>
+                    <Button
+                        android:id="@+id/btnPDF2"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_below="@id/radios"
+                        android:layout_marginLeft="70dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_toRightOf="@id/btnPDF1"
+                        android:background="@drawable/pdf2" />
+
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/pinFiles"
+                    android:layout_width="216dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/iconGroup"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/colorPrimary"
+                    android:elevation="5dp"
+                    android:text="Pin File(s)"
+                    android:textColor="@drawable/tab_white"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/pinInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/pinFiles"
+                    android:layout_margin="12dp"
+                    android:text="Please note that you can't pin same shortcut twice with different icons."
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/dev"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/pinInfo"
+                    android:layout_margin="12dp"
+                    android:text="Developed By Paras Singh Sidhu"
+                    android:fontFamily="sans-serif-light"
+                    android:textAllCaps="true"
+                    android:layout_centerHorizontal="true"
+                    android:visibility="visible" />
+
+            </RelativeLayout>
+        </android.support.v4.widget.NestedScrollView>
+
+        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="ca-app-pub-6089158898128407/2456226899"></com.google.android.gms.ads.AdView>
+    </LinearLayout>
 </RelativeLayout>
