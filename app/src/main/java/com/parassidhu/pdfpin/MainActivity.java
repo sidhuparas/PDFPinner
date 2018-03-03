@@ -1,4 +1,4 @@
-package com.parassidhu.pdfpinner;
+package com.parassidhu.pdfpin;
 
 import android.Manifest;
 import android.app.Activity;
@@ -8,22 +8,15 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
-import android.graphics.Color;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.*;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,13 +27,9 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -85,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
     private void choosePDF() {
         String[] pdf = {".pdf"};
         FilePickerBuilder.getInstance()
-                .setActivityTheme(R.style.AppTheme)
                 .addFileSupport("PDF", pdf)
                 .enableDocSupport(false)
                 .enableSelectAll(true)
@@ -94,9 +82,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkPerm() {
-        hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
         int PERMISSION_ALL = 1;
-        String[] PERMISSIONS = {Manifest.permission.READ_EXTERNAL_STORAGE};
+        String[] PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
         if (!hasPermissions(this, PERMISSIONS)) {
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
         } else {

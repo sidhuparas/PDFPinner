@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.parassidhu.pdfpinner.MainActivity"
+    tools:context="com.parassidhu.pdfpin.MainActivity"
     tools:showIn="@layout/activity_main">
 
     <LinearLayout
@@ -166,7 +166,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            ads:adSize="SMART_BANNER"
-            ads:adUnitId="ca-app-pub-6089158898128407/2456226899"></com.google.android.gms.ads.AdView>
+            ads:adSize="BANNER"
+            ads:adUnitId="ca-app-pub-6089158898128407/6723665926"></com.google.android.gms.ads.AdView>
     </LinearLayout>
 </RelativeLayout>
