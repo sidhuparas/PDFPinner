@@ -1,4 +1,4 @@
-package com.parassidhu.pdfpinner;
+package com.parassidhu.pdfpin;
 
 import org.junit.Test;
 
