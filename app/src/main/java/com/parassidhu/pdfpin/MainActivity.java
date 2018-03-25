@@ -75,9 +75,9 @@ public class MainActivity extends AppCompatActivity {
         String[] pdf = {".pdf"};
         FilePickerBuilder.getInstance()
                 .addFileSupport("PDF", pdf)
+                .setActivityTheme(R.style.LibAppTheme)
                 .enableDocSupport(false)
                 .enableSelectAll(true)
-                .showFolderView(false)
                 .pickFile(MainActivity.this);
     }
 
