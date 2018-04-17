@@ -17,6 +17,9 @@
         <item name="android:colorBackground">@android:color/background_light</item>
         <item name="android:windowBackground">@android:color/white</item>
     </style>
+
+    <style name="PickerTabLayout" parent="Widget.Design.TabLayout"> fill match_parent 2.7dp 15dp 15dp fixed ?attr/selectableItemBackground </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

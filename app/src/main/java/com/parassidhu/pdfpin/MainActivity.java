@@ -41,7 +41,7 @@ import droidninja.filepicker.FilePickerConst;
 public class MainActivity extends AppCompatActivity {
 
     private Button chooseBtn, pinFiles, btnPDF1,btnPDF2;
-    private RadioButton blue,red;
+    private RadioButton blue;
     private ArrayList<String> docPaths = new ArrayList<>();
     private ArrayList<ListItem> listItems = new ArrayList<>();
     private int image, num=0;
@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         FilePickerBuilder.getInstance()
                 .addFileSupport("PDF", pdf)
                 .setActivityTheme(R.style.LibAppTheme)
+                .enableSelectAll(true)
                 .enableDocSupport(false)
                 .enableSelectAll(true)
                 .pickFile(MainActivity.this);
@@ -122,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
         file_list.setLayoutManager(new LinearLayoutManager(this));
         pinFiles = findViewById(R.id.pinFiles);
         blue = findViewById(R.id.blueIcon);
-        red = findViewById(R.id.redIcon);
         image = R.drawable.pdf;
         chooseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
