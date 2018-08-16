@@ -12,14 +12,15 @@ import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
@@ -33,18 +34,22 @@ import com.google.android.gms.ads.MobileAds;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button chooseBtn, pinFiles, btnPDF1,btnPDF2;
+    public static final String SHORTCUT_VALUE = "yes";
+    public static final String SHORTCUT_KEY = "shortcut";
+    public static final String SHORTCUT_ID = "id1";
+
+    private Button chooseBtn, pinFiles, btnPDF1, btnPDF2;
     private RadioButton blue;
     private ArrayList<String> docPaths = new ArrayList<>();
     private ArrayList<ListItem> listItems = new ArrayList<>();
-    private int image, num=0;
+    private int image, num = 0;
     private RecyclerView file_list;
     private DataAdapter dataAdapter;
     private TextView info, pinInfo, centerInfo, dev;
@@ -61,13 +66,15 @@ public class MainActivity extends AppCompatActivity {
         initAds();
         pinDynamicShortcut();
 
+        // Check if the app is opened using long-press shortcut menu
         try {
             Intent intent = getIntent();
             if (intent.getExtras() != null) {
-                if (intent.getExtras().getString("shortcut").equals("yes"))
+                if (intent.getExtras().getString(SHORTCUT_KEY).equals(SHORTCUT_VALUE))
                     chooseBtn.callOnClick();
             }
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
     }
 
     //Shows the choose files picker
@@ -76,14 +83,12 @@ public class MainActivity extends AppCompatActivity {
         FilePickerBuilder.getInstance()
                 .addFileSupport("PDF", pdf)
                 .setActivityTheme(R.style.LibAppTheme)
-                .enableSelectAll(true)
                 .enableDocSupport(false)
                 .enableSelectAll(true)
                 .pickFile(MainActivity.this);
     }
 
     private void checkPerm() {
-        hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
         int PERMISSION_ALL = 1;
         String[] PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
         if (!hasPermissions(this, PERMISSIONS)) {
@@ -94,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static boolean hasPermissions(Context context, String... permissions) {
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
             for (String permission : permissions) {
                 if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
                     return false;
@@ -106,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
         if (grantResults.length > 0
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             choosePDF();
@@ -124,12 +129,14 @@ public class MainActivity extends AppCompatActivity {
         pinFiles = findViewById(R.id.pinFiles);
         blue = findViewById(R.id.blueIcon);
         image = R.drawable.pdf;
+
         chooseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkPerm();
             }
         });
+
         info = findViewById(R.id.info);
         pinInfo = findViewById(R.id.pinInfo);
         radios = findViewById(R.id.radios);
@@ -138,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
         centerInfo = findViewById(R.id.centerInfo);
         dev = findViewById(R.id.dev);
         toggle(0);
+
         pinFiles.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,49 +154,55 @@ public class MainActivity extends AppCompatActivity {
                         addShortcut(listItems.get(i).getPath(), listItems.get(i).getName());
                     }
                     Toast.makeText(MainActivity.this, "Success!", Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     oneByOne();
                 }
             }
         });
+
         blue.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(blue.isChecked())
-                image=R.drawable.pdf;
-                else image=R.drawable.pdf2;
+                if (blue.isChecked())
+                    image = R.drawable.pdf;
+                else image = R.drawable.pdf2;
             }
         });
     }
 
-    private void oneByOne(){
-        if (num<listItems.size()-1) {
+    private void oneByOne() {
+        // Could've used For-Loop but purposefully didn't do so
+        if (num < listItems.size() - 1) {
             if (listItems.size() > 1) {
-                pinFiles.setText("Pin Next File");
+                pinFiles.setText(R.string.pin_next);
                 addShortcutInOreo(listItems.get(num).getPath(), listItems.get(num).getName());
                 num++;
             } else {
                 addShortcutInOreo(listItems.get(num).getPath(), listItems.get(num).getName());
-                Toast.makeText(this, "All selected files have been pinned!", Toast.LENGTH_SHORT).show();
+                successMessage();
             }
-        }else if (num==listItems.size()-1){
+        } else if (num == listItems.size() - 1) {
             pinFiles.setText("Pin File(s)");
             addShortcutInOreo(listItems.get(num).getPath(), listItems.get(num).getName());
-            num=0;
-            Toast.makeText(this, "All selected files have been pinned!", Toast.LENGTH_SHORT).show();
+            num = 0;
+            successMessage();
         }
     }
 
+    private void successMessage() {
+        Toast.makeText(this, "All selected files have been pinned!", Toast.LENGTH_SHORT).show();
+    }
+
     //Custom toggle to set views' visibility
-    private void toggle(int val){
-        if (val==0) {
+    private void toggle(int val) {
+        if (val == 0) {
             radios.setVisibility(View.GONE);
             btnPDF1.setVisibility(View.GONE);
             btnPDF2.setVisibility(View.GONE);
             pinFiles.setVisibility(View.GONE);
             centerInfo.setVisibility(View.VISIBLE);
             dev.setVisibility(View.GONE);
-        }else {
+        } else {
             radios.setVisibility(View.VISIBLE);
             btnPDF1.setVisibility(View.VISIBLE);
             btnPDF2.setVisibility(View.VISIBLE);
@@ -208,24 +222,31 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
         }
+
         listItems.clear();
         for (int i = 0; i < docPaths.size(); i++) {
-            String name = docPaths.get(i);
-            listItems.add(new ListItem(name, name.substring(name.lastIndexOf("/") + 1, name.lastIndexOf("."))));
+            String path = docPaths.get(i);
+            // Example: root/DCIM/Pictures/IMG_8004.JPG
+            String name = path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."));
+            listItems.add(new ListItem(path, name));
         }
         addDataToList(listItems);
     }
 
     //Adds the selected PDFs to RecyclerView
     private void addDataToList(ArrayList<ListItem> listItems) {
-        num=0;
+        num = 0;
         pinFiles.setText("Pin File(s)");
         dataAdapter = new DataAdapter(this, listItems);
         file_list.setAdapter(dataAdapter);
-        if(isOreo())
+
+        // Show Oreo specific information
+        if (isOreo())
             info.setVisibility(View.VISIBLE);
+
         pinInfo.setVisibility(View.VISIBLE);
-        if(listItems.size()!=0)
+
+        if (listItems.size() != 0)
             toggle(1);
         else {
             toggle(0);
@@ -240,31 +261,35 @@ public class MainActivity extends AppCompatActivity {
         if (file.exists()) {
             Uri path = Uri.fromFile(file);
             Intent shortcutIntent = new Intent(Intent.ACTION_VIEW);
-            shortcutIntent.setDataAndType(path, "application/pdf");
+            shortcutIntent.setDataAndTypeAndNormalize(path, "application/pdf");
+
             Intent addIntent = new Intent();
             addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
             addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, pdfName);
             addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
-                    Intent.ShortcutIconResource.fromContext(this.getApplicationContext(),image));
+                    Intent.ShortcutIconResource.fromContext(this.getApplicationContext(), image));
             addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
             getApplicationContext().sendBroadcast(addIntent);
         } else {
-            Toast.makeText(this, "Some error occurred!", Toast.LENGTH_SHORT).show();
+            errorMessage(null);
         }
     }
 
-    private void addShortcutInOreo(String path1, String pdfName){
+    private void addShortcutInOreo(String path1, String pdfName) {
         try {
             File file = new File(path1);
             Intent pdfIntent = new Intent(Intent.ACTION_VIEW);
             pdfIntent.setDataAndType(Uri.fromFile(file), "application/pdf");
 
             if (Build.VERSION.SDK_INT > 25) {
-                ShortcutManager shortcutManager;
-                shortcutManager = getSystemService(ShortcutManager.class);
+                ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
+
+                // Check which icon is to be pinned
                 if (blue.isChecked())
                     image = R.drawable.pdf;
                 else image = R.drawable.pdf2;
+
+                // Create a shortcut
                 ShortcutInfo shortcut = new ShortcutInfo.Builder(this, pdfName)
                         .setShortLabel(pdfName)
                         .setLongLabel(pdfName)
@@ -274,9 +299,15 @@ public class MainActivity extends AppCompatActivity {
 
                 shortcutManager.requestPinShortcut(shortcut, null);
             }
-        }catch (Exception e){
-            Toast.makeText(this, "Some error occurred: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            errorMessage(e);
         }
+    }
+
+    private void errorMessage(Exception e) {
+        if (e != null)
+            Toast.makeText(this, "Some error occurred: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        else Toast.makeText(this, "Some error occurred!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -288,6 +319,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+
+        // Rate and Review is clicked
         if (id == R.id.action_settings) {
             Uri uri = Uri.parse("market://details?id=" + getApplicationContext().getPackageName());
             Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
@@ -302,6 +335,7 @@ public class MainActivity extends AppCompatActivity {
             }
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -311,28 +345,36 @@ public class MainActivity extends AppCompatActivity {
         else return false;
     }
 
-    private void initAds(){
-        MobileAds.initialize(this,getResources().getString(R.string.admob_id));
+    private void initAds() {
+        MobileAds.initialize(this, BuildConfig.BANNER_KEY);
 
         AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
     }
 
-    private void pinDynamicShortcut(){
-        if(Build.VERSION.SDK_INT>24) {
+    // This is a Nougat specific shortcut which is shown on long press of app shortcut
+    private void pinDynamicShortcut() {
+        // If it's Nougat
+        if (Build.VERSION.SDK_INT > 24) {
+            // Get instance of ShortcutManager Service
             ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
 
-            Intent intent = new Intent(Intent.ACTION_MAIN,Uri.EMPTY,this,MainActivity.class)
+            Intent intent = new Intent(Intent.ACTION_MAIN, Uri.EMPTY, this, MainActivity.class)
                     .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.putExtra("shortcut","yes");
-            ShortcutInfo shortcut = new ShortcutInfo.Builder(this, "id1")
+
+            // This extra will be later used to check if there exists a shortcut or no
+            intent.putExtra(SHORTCUT_KEY, SHORTCUT_VALUE);
+
+            // Create a shortcut
+            ShortcutInfo shortcut = new ShortcutInfo.Builder(this, SHORTCUT_ID)
                     .setShortLabel("Choose File(s)")
                     .setIcon(Icon.createWithResource(this, R.drawable.choose_files))
                     .setIntent(intent)
                     .build();
 
-            shortcutManager.setDynamicShortcuts(Arrays.asList(shortcut));
+            // Ask the service to pin the shortcut
+            shortcutManager.setDynamicShortcuts(Collections.singletonList(shortcut));
         }
     }
 }

@@ -1,5 +1,14 @@
 <resources>
     <string name="app_name">PDF Pinner</string>
     <string name="action_settings">Settings</string>
-    <string name="admob_id">ca-app-pub-6089158898128407~4927723742</string>
+    <string name="rate_and_review">Rate and Review</string>
+    <string name="choose_">Choose File(s)</string>
+    <string name="default_text">Select some files to get started...</string>
+    <string name="oreo_info">INFORMATION: Since you\'re using Android 8.0 or higher, you need to pin shortcuts one-by-one due to restriction by the OS.</string>
+    <string name="blue">Blue Icon</string>
+    <string name="red">Red Icon</string>
+    <string name="pin">Pin File(s)</string>
+    <string name="instruction">Please note that you can\'t pin same shortcut twice with different icons.</string>
+    <string name="developer">Developed By Paras Singh Sidhu</string>
+    <string name="pin_next">Pin Next File</string>
 </resources>
