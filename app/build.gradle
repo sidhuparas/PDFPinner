@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'io.fabric'
 android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.parassidhu.pdfpin"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 11
-        versionName "1.1"
+        versionCode 12
+        versionName "1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -23,14 +23,13 @@ android {
         }
     }
 }
-
+// Don't update to 28 till Library bug is fixed
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
-    implementation 'com.google.firebase:firebase-crash:16.0.1'
-    implementation 'com.google.firebase:firebase-core:16.0.1'
-    implementation 'com.google.firebase:firebase-messaging:17.1.0'
+    implementation 'com.google.firebase:firebase-core:16.0.3'
+    implementation 'com.google.firebase:firebase-messaging:17.3.2'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
@@ -39,6 +38,8 @@ dependencies {
     implementation 'com.droidninja:filepicker:2.1.5'
     implementation 'com.yarolegovich:lovely-dialog:1.0.7'
     implementation 'com.google.android.gms:play-services-ads:15.0.1'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

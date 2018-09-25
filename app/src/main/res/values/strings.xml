@@ -11,4 +11,6 @@
     <string name="instruction">Please note that you can\'t pin same shortcut twice with different icons.</string>
     <string name="developer">Developed By Paras Singh Sidhu</string>
     <string name="pin_next">Pin Next File</string>
+    <string name="edit">Edit</string>
+    <string name="privacy_amp_policy">Privacy Policy</string>
 </resources>

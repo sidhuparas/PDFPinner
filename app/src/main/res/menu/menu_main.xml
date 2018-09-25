@@ -2,9 +2,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.parassidhu.pdfpin.MainActivity">
+
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/rate_and_review"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/privacy"
+        android:orderInCategory="100"
+        android:title="@string/privacy_amp_policy"
+        app:showAsAction="never" />
+
 </menu>
