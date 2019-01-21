@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.getIntent
 import android.content.pm.PackageManager
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
@@ -13,56 +12,47 @@ import android.graphics.drawable.Icon
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.*
+import android.widget.Toast
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.common.util.CollectionUtils.listOf
+import droidninja.filepicker.FilePickerBuilder
+import droidninja.filepicker.FilePickerConst
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_main.*
 import java.io.File
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(){
 
-    private var chooseBtn: Button? = null
-    private var pinFiles: Button? = null
-    private var btnPDF1: Button? = null
-    private var btnPDF2: Button? = null
-    private var blue: RadioButton? = null
     private var docPaths = ArrayList<String>()
     private val listItems = ArrayList<ListItem>()
     private var image: Int = 0
     private var num = 0
-    private var file_list: RecyclerView? = null
     private var dataAdapter: DataAdapter? = null
-    private var info: TextView? = null
-    private var pinInfo: TextView? = null
-    private var centerInfo: TextView? = null
-    private var dev: TextView? = null
-    private var radios: RadioGroup? = null
 
     private val isOreo: Boolean
-        get() = if (Build.VERSION.SDK_INT > 25)
-            true
-        else
-            false
+        get() = Build.VERSION.SDK_INT > 25
 
-    protected fun onCreate(savedInstanceState: Bundle) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-        setTitle("")
+        title = ""
         initViews()
         initAds()
         pinDynamicShortcut()
 
         // Check if the app is opened using long-press shortcut menu
         try {
-            val intent = getIntent()
-            if (intent.getExtras() != null) {
-                if (intent.getExtras()!!.getString(SHORTCUT_KEY) == SHORTCUT_VALUE)
+            val intent = intent
+            if (intent.extras != null) {
+                if (intent.extras!!.getString(SHORTCUT_KEY) == SHORTCUT_VALUE)
                     chooseBtn!!.callOnClick()
             }
         } catch (e: Exception) {
@@ -83,7 +73,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkPerm() {
         val PERMISSION_ALL = 1
-        val PERMISSIONS = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+        val PERMISSIONS = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
         if (!hasPermissions(this, *PERMISSIONS)) {
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL)
         } else {
@@ -91,51 +82,41 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun onRequestPermissionsResult(requestCode: Int,
+    override fun onRequestPermissionsResult(requestCode: Int,
                                    permissions: Array<String>, grantResults: IntArray) {
-        if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             choosePDF()
         } else {
-            Toast.makeText(this, "Permissions for accessing External Storage not granted! To choose a PDF file, it's required." + "Please go to Settings->Apps to grant Storage permission.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this,
+                    """Permissions for accessing External Storage not granted! To choose a PDF file, it's required.
+                            "Please go to Settings->Apps to grant Storage permission.""", Toast.LENGTH_SHORT).show()
         }
     }
 
     //Initializes all the mess. btnPDFx represents both icons.
     private fun initViews() {
-        chooseBtn = findViewById(R.id.chooseBtn)
-        file_list = findViewById(R.id.file_list)
-        file_list!!.setLayoutManager(LinearLayoutManager(this))
-        pinFiles = findViewById(R.id.pinFiles)
-        blue = findViewById(R.id.blueIcon)
+        file_list.layoutManager = LinearLayoutManager(this)
         image = R.drawable.pdf
 
-        chooseBtn!!.setOnClickListener { checkPerm() }
-
-        info = findViewById(R.id.info)
-        pinInfo = findViewById(R.id.pinInfo)
-        radios = findViewById(R.id.radios)
-        btnPDF1 = findViewById(R.id.btnPDF1)
-        btnPDF2 = findViewById(R.id.btnPDF2)
-        centerInfo = findViewById(R.id.centerInfo)
-        dev = findViewById(R.id.dev)
+        chooseBtn.setOnClickListener { checkPerm() }
         toggle(0)
 
-        pinFiles!!.setOnClickListener {
+        pinFiles.setOnClickListener {
             if (!isOreo) {
                 for (i in listItems.indices) {
                     addShortcut(listItems[i].path, listItems[i].name)
                 }
-                Toast.makeText(this@MainActivity, "Success!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show()
             } else {
                 oneByOne()
             }
         }
 
-        blue!!.setOnCheckedChangeListener { compoundButton, b ->
-            if (blue!!.isChecked)
-                image = R.drawable.pdf
+        blueIcon.setOnCheckedChangeListener { _, _ ->
+            image = if (blueIcon.isChecked)
+                R.drawable.pdf
             else
-                image = R.drawable.pdf2
+                R.drawable.pdf2
         }
     }
 
@@ -165,7 +146,7 @@ class MainActivity : AppCompatActivity() {
     //Custom toggle to set views' visibility
     private fun toggle(`val`: Int) {
         if (`val` == 0) {
-            radios!!.visibility = View.GONE
+            radios.visibility = View.GONE
             btnPDF1!!.visibility = View.GONE
             btnPDF2!!.visibility = View.GONE
             pinFiles!!.visibility = View.GONE
@@ -181,7 +162,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             FilePickerConst.REQUEST_CODE_DOC -> if (resultCode == Activity.RESULT_OK && data != null) {
                 docPaths = ArrayList()
@@ -202,9 +183,9 @@ class MainActivity : AppCompatActivity() {
     //Adds the selected PDFs to RecyclerView
     private fun addDataToList(listItems: ArrayList<ListItem>) {
         num = 0
-        pinFiles!!.text = "Pin File(s)"
+        pinFiles.text = "Pin File(s)"
         dataAdapter = DataAdapter(this, listItems)
-        file_list!!.setAdapter(dataAdapter)
+        file_list.adapter = dataAdapter
 
         // Show Oreo specific information
         if (isOreo)
@@ -224,20 +205,22 @@ class MainActivity : AppCompatActivity() {
 
     private fun addShortcut(path1: String, pdfName: String) {
         val file = File(path1)
-        if (file.exists()) {
-            val path = Uri.fromFile(file)
-            val shortcutIntent = Intent(Intent.ACTION_VIEW)
-            shortcutIntent.setDataAndTypeAndNormalize(path, "application/pdf")
+        if (Build.VERSION.SDK_INT<26) {
+            if (file.exists()) {
+                val path = Uri.fromFile(file)
+                val shortcutIntent = Intent(Intent.ACTION_VIEW)
+                shortcutIntent.setDataAndTypeAndNormalize(path, "application/pdf")
 
-            val addIntent = Intent()
-            addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent)
-            addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, pdfName)
-            addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
-                    Intent.ShortcutIconResource.fromContext(this.getApplicationContext(), image))
-            addIntent.action = "com.android.launcher.action.INSTALL_SHORTCUT"
-            getApplicationContext().sendBroadcast(addIntent)
-        } else {
-            errorMessage(null)
+                val addIntent = Intent()
+                addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent)
+                addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, pdfName)
+                addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
+                        Intent.ShortcutIconResource.fromContext(applicationContext, image))
+                addIntent.action = "com.android.launcher.action.INSTALL_SHORTCUT"
+                applicationContext.sendBroadcast(addIntent)
+            } else {
+                errorMessage(null)
+            }
         }
     }
 
@@ -251,10 +234,10 @@ class MainActivity : AppCompatActivity() {
                 val shortcutManager = getSystemService(ShortcutManager::class.java)
 
                 // Check which icon is to be pinned
-                if (blue!!.isChecked)
-                    image = R.drawable.pdf
+                image = if (blueIcon.isChecked)
+                    R.drawable.pdf
                 else
-                    image = R.drawable.pdf2
+                    R.drawable.pdf2
 
                 // Create a shortcut
                 val shortcut = ShortcutInfo.Builder(this, pdfName)
@@ -279,17 +262,17 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Some error occurred!", Toast.LENGTH_SHORT).show()
     }
 
-    fun onCreateOptionsMenu(menu: Menu): Boolean {
-        getMenuInflater().inflate(R.menu.menu_main, menu)
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
 
-    fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
 
         // Rate and Review is clicked
         if (id == R.id.action_settings) {
-            val uri = Uri.parse("market://details?id=" + getApplicationContext().getPackageName())
+            val uri = Uri.parse("market://details?id=" + applicationContext.packageName)
             val goToMarket = Intent(Intent.ACTION_VIEW, uri)
             goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY or
                     Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
@@ -298,7 +281,7 @@ class MainActivity : AppCompatActivity() {
                 startActivity(goToMarket)
             } catch (e: ActivityNotFoundException) {
                 startActivity(Intent(Intent.ACTION_VIEW,
-                        Uri.parse("http://play.google.com/store/apps/details?id=" + getApplicationContext().getPackageName())))
+                        Uri.parse("http://play.google.com/store/apps/details?id=" + applicationContext.packageName)))
             }
 
             return true
@@ -318,9 +301,8 @@ class MainActivity : AppCompatActivity() {
     private fun initAds() {
         MobileAds.initialize(this, BuildConfig.BANNER_KEY)
 
-        val mAdView = findViewById(R.id.adView)
         val adRequest = AdRequest.Builder().build()
-        mAdView.loadAd(adRequest)
+        adView.loadAd(adRequest)
     }
 
     // This is a Nougat specific shortcut which is shown on long press of app shortcut
@@ -344,20 +326,20 @@ class MainActivity : AppCompatActivity() {
                     .build()
 
             // Ask the service to pin the shortcut
-            shortcutManager.setDynamicShortcuts(listOf<ShortcutInfo>(shortcut))
+            shortcutManager.dynamicShortcuts = listOf(shortcut)
         }
     }
 
     companion object {
 
-        val SHORTCUT_VALUE = "yes"
-        val SHORTCUT_KEY = "shortcut"
-        val SHORTCUT_ID = "id1"
+        const val SHORTCUT_VALUE = "yes"
+        const val SHORTCUT_KEY = "shortcut"
+        const val SHORTCUT_ID = "id1"
 
         fun hasPermissions(context: Context?, vararg permissions: String): Boolean {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null) {
                 for (permission in permissions) {
-                    if (ActivityCompat.checkSelfPermission(context, permission) !== PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
                         return false
                     }
                 }
