@@ -1,7 +1,7 @@
 package com.parassidhu.pdfpin
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +27,7 @@ class DataAdapter(private val context: Context, private val listItems: ArrayList
     }
 
     inner class ViewHolder(override val containerView: View?)
-        : RecyclerView.ViewHolder(containerView), LayoutContainer {
+        : RecyclerView.ViewHolder(containerView!!), LayoutContainer {
 
         fun bind(i: Int) {
             filename.text = listItems[i].name

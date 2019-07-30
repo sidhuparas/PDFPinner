@@ -12,9 +12,9 @@ import android.graphics.drawable.Icon
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.core.app.ActivityCompat
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -23,6 +23,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import droidninja.filepicker.FilePickerBuilder
 import droidninja.filepicker.FilePickerConst
+import droidninja.filepicker.utils.FilePickerUtils
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import java.io.File
@@ -47,7 +48,6 @@ class MainActivity : AppCompatActivity(){
         initViews()
         initAds()
         pinDynamicShortcut()
-
         // Check if the app is opened using long-press shortcut menu
         try {
             val intent = intent
@@ -57,13 +57,13 @@ class MainActivity : AppCompatActivity(){
             }
         } catch (e: Exception) {
         }
-
+        FilePickerUtils.notifyMediaStore(this, "/sdcard/")
     }
 
     //Shows the choose files picker
     private fun choosePDF() {
         val pdf = arrayOf(".pdf")
-        FilePickerBuilder.getInstance()
+        FilePickerBuilder.instance
                 .addFileSupport("PDF", pdf)
                 .setActivityTheme(R.style.LibAppTheme)
                 .enableDocSupport(false)
@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity(){
         pinFiles.setOnClickListener {
             if (!isOreo) {
                 for (i in listItems.indices) {
-                    addShortcut(listItems[i].path, listItems[i].name)
+                    addShortcut(listItems[i].path.toString(), listItems[i].name.toString())
                 }
                 Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show()
             } else {
@@ -125,15 +125,15 @@ class MainActivity : AppCompatActivity(){
         if (num < listItems.size - 1) {
             if (listItems.size > 1) {
                 pinFiles!!.setText(R.string.pin_next)
-                addShortcutInOreo(listItems[num].path, listItems[num].name)
+                addShortcutInOreo(listItems[num].path.toString(), listItems[num].name.toString())
                 num++
             } else {
-                addShortcutInOreo(listItems[num].path, listItems[num].name)
+                addShortcutInOreo(listItems[num].path.toString(), listItems[num].name.toString())
                 successMessage()
             }
         } else if (num == listItems.size - 1) {
             pinFiles!!.text = "Pin File(s)"
-            addShortcutInOreo(listItems[num].path, listItems[num].name)
+            addShortcutInOreo(listItems[num].path.toString(), listItems[num].name.toString())
             num = 0
             successMessage()
         }
