@@ -12,22 +12,23 @@ import android.graphics.drawable.Icon
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import androidx.core.app.ActivityCompat
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
+import android.os.Environment
+import android.os.Parcelable
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import droidninja.filepicker.FilePickerBuilder
 import droidninja.filepicker.FilePickerConst
-import droidninja.filepicker.utils.FilePickerUtils
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import java.io.File
-import java.util.*
 
 class MainActivity : AppCompatActivity(){
 
@@ -57,7 +58,45 @@ class MainActivity : AppCompatActivity(){
             }
         } catch (e: Exception) {
         }
-        FilePickerUtils.notifyMediaStore(this, "/sdcard/")
+        checkIfAppIsLaunchedFromShareMenu()
+    }
+
+    private fun checkIfAppIsLaunchedFromShareMenu() {
+        if (intent?.extras == null)
+            return
+
+        if  (intent?.action == Intent.ACTION_SEND) {
+            val uri = intent.getParcelableExtra(Intent.EXTRA_STREAM) as Uri
+            customLogicForShareMenuFiles(uri, true)
+        } else if (intent?.action == Intent.ACTION_SEND_MULTIPLE){
+            val list = intent.getParcelableArrayListExtra<Parcelable>(Intent.EXTRA_STREAM)
+            docPaths = ArrayList()
+            for (i in 0 until list.size) {
+                val uriString = (list[i] as Uri).path.toString()
+                docPaths.add(uriString)
+            }
+            customLogicForShareMenuFiles(list[0] as Uri, false)
+        }
+    }
+
+    private fun customLogicForShareMenuFiles(uri: Uri, isSingleFile: Boolean) {
+       if (isSingleFile) {
+           docPaths = ArrayList()
+           docPaths.add(uri.path.toString())
+       }
+
+        listItems.clear()
+        for (i in docPaths.indices) {
+            val path = docPaths[i]
+            val newPath = Environment.getExternalStorageDirectory().path + "/" +
+                    path.substring(path.indexOf(":") + 1)
+            // Example: root/DCIM/Pictures/IMG_8004.JPG
+            Log.d("Data", path)
+            val name = path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."))
+
+            listItems.add(ListItem(newPath, name))
+        }
+        addDataToList(listItems)
     }
 
     //Shows the choose files picker
@@ -99,7 +138,7 @@ class MainActivity : AppCompatActivity(){
         image = R.drawable.pdf
 
         chooseBtn.setOnClickListener { checkPerm() }
-        toggle(0)
+        toggleViewsVisibility(0)
 
         pinFiles.setOnClickListener {
             if (!isOreo) {
@@ -143,8 +182,8 @@ class MainActivity : AppCompatActivity(){
         Toast.makeText(this, "All selected files have been pinned!", Toast.LENGTH_SHORT).show()
     }
 
-    //Custom toggle to set views' visibility
-    private fun toggle(`val`: Int) {
+    //Custom toggleViewsVisibility to set views' visibility
+    private fun toggleViewsVisibility(`val`: Int) {
         if (`val` == 0) {
             radios.visibility = View.GONE
             btnPDF1!!.visibility = View.GONE
@@ -164,7 +203,8 @@ class MainActivity : AppCompatActivity(){
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            FilePickerConst.REQUEST_CODE_DOC -> if (resultCode == Activity.RESULT_OK && data != null) {
+            FilePickerConst.REQUEST_CODE_DOC ->
+                if (resultCode == Activity.RESULT_OK && data != null) {
                 docPaths = ArrayList()
                 docPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS))
             }
@@ -177,6 +217,7 @@ class MainActivity : AppCompatActivity(){
             val name = path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."))
             listItems.add(ListItem(path, name))
         }
+
         addDataToList(listItems)
     }
 
@@ -194,9 +235,9 @@ class MainActivity : AppCompatActivity(){
         pinInfo!!.visibility = View.VISIBLE
 
         if (listItems.size != 0)
-            toggle(1)
+            toggleViewsVisibility(1)
         else {
-            toggle(0)
+            toggleViewsVisibility(0)
             info!!.visibility = View.GONE
             pinInfo!!.visibility = View.GONE
             dev!!.visibility = View.GONE
@@ -225,10 +266,18 @@ class MainActivity : AppCompatActivity(){
     }
 
     private fun addShortcutInOreo(path1: String, pdfName: String) {
+        val file = File(path1)
         try {
-            val file = File(path1)
+            Log.d("Data", file.path)
             val pdfIntent = Intent(Intent.ACTION_VIEW)
-            pdfIntent.setDataAndType(Uri.fromFile(file), "application/pdf")
+            var uri = Uri.fromFile(file)
+            if (uri.path.toString().contains("/external_files"))
+                uri = Uri.fromFile(File(uri.path.toString().replace(
+                        "/external_files", "")))
+            pdfIntent.setDataAndType(uri, "application/pdf")
+
+            Log.d("DataPath", uri.path)
+            Log.d("DataPath", pdfName)
 
             if (Build.VERSION.SDK_INT > 25) {
                 val shortcutManager = getSystemService(ShortcutManager::class.java)
@@ -286,7 +335,8 @@ class MainActivity : AppCompatActivity(){
 
             return true
         } else if (id == R.id.privacy) {
-            val uri = Uri.parse("https://docs.google.com/document/d/1WU1hg3PmqMPhVEQuS-Um4mgIMTc9L5KhZZTC6gxEwao/edit")
+            val uri = Uri.parse(
+                    "https://docs.google.com/document/d/1WU1hg3PmqMPhVEQuS-Um4mgIMTc9L5KhZZTC6gxEwao/edit")
             val intent = Intent(Intent.ACTION_VIEW, uri)
             try {
                 startActivity(intent)

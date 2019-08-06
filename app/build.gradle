@@ -4,13 +4,13 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'io.fabric'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 28
     defaultConfig {
         applicationId "com.parassidhu.pdfpin"
         minSdkVersion 17
-        targetSdkVersion 29
-        versionCode 12
-        versionName "1.2"
+        targetSdkVersion 28
+        versionCode 15
+        versionName "1.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     androidExtensions {

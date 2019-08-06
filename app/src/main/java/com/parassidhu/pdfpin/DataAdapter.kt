@@ -13,7 +13,7 @@ import java.util.*
 class DataAdapter(private val context: Context, private val listItems: ArrayList<ListItem>)
     : RecyclerView.Adapter<DataAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): DataAdapter.ViewHolder {
+    override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
         val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.row_layout, viewGroup, false)
         return ViewHolder(view)
     }
