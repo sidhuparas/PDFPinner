@@ -31,16 +31,29 @@ class DataAdapter(private val context: Context, private val listItems: ArrayList
 
         fun bind(i: Int) {
             filename.text = listItems[i].name
+
             edit.setOnClickListener {
                 LovelyTextInputDialog(context)
                         .setTopColorRes(R.color.blue)
                         .setTitle("Rename")
                         .setInitialInput(filename.text.toString())
                         .setConfirmButton(android.R.string.ok) { text ->
-                            if (!text.isEmpty()) {
+                            if (text.isNotEmpty()) {
                                 listItems[adapterPosition].name = text
                                 filename.text = listItems[adapterPosition].name
                             }
+                        }
+                        .show()
+            }
+
+            path.setOnClickListener {
+                LovelyTextInputDialog(context)
+                        .setTopColorRes(R.color.blue)
+                        .setTitle("Edit Path")
+                        .setInitialInput(listItems[i].path)
+                        .setMessage("Only edit this if pinned shortcut is not working.")
+                        .setConfirmButton(android.R.string.ok) { text ->
+                            listItems[adapterPosition].path = text
                         }
                         .show()
             }

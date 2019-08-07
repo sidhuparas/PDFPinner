@@ -169,7 +169,7 @@
                 android:layout_marginEnd="8dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:text="Pinned Shortcut Not Opening?"
+                android:text="@string/pinned_shortcut_not_opening"
                 android:background="@color/blue"
                 android:elevation="5dp"
                 android:visibility="invisible"

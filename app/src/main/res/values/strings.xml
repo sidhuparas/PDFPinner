@@ -11,7 +11,8 @@
     <string name="instruction">Please note that you can\'t pin same shortcut twice with different icons.</string>
     <string name="developer">Developed By Paras Singh Sidhu</string>
     <string name="pin_next">Pin Next File</string>
-    <string name="edit">Edit</string>
+    <string name="edit">Edit Name</string>
+    <string name="edit_path">Edit Path</string>
     <string name="privacy_amp_policy">Privacy Policy</string>
 
     <string name="what_is_the_problem">If you\'re adding PDF files to home screen and getting an error that file can\'t be opened, we have a fix for you.</string>
@@ -19,5 +20,7 @@
     <string name="why_is_this_happening_title">Why is this happening?</string>
     <string name="why_is_this_happening">There are several different versions of Android. There are several manufacturers who modify their OS and this bring unpredictability in implementing the feature. Different OS provide different URI (required to launch the file from shortcut) and app handles most of the URIs but still there\'s chance some cases are left out.</string>
     <string name="how_to_solve_title">How to Solve?</string>
-    <string name="how_to_solve">To solve the issue, you need to edit the file URI manually. This isn\'t difficult considering the fact that URI is just a format of file path.\n\nWhen selecting the file in main interface, press the icon besides the pencil icon. Then check if the file path is similar to what's shown there. Edit as per the requirement.</string>
+    <string name="how_to_solve">To solve the issue, you need to edit the file URI manually. This isn\'t difficult considering the fact that URI is just a format of file path.\n\nWhen selecting the file in main interface, press the file icon besides the pencil icon. Then check if the file path is similar to what\'s shown there. Edit as per the requirement.</string>
+    <string name="pinned_shortcut_not_opening">Pinned Shortcut Not Opening?</string>
+    <string name="examples">Correct Format: /storage/emulated/0/Download/dummy.pdf\n\nIncorrect Format: /storage/emulated//0/Download/dummy.pdf (Double slashes)\n\nURI normally starts with /storage. After \"0/\", actual folder and file name follows as can be seen in the example above. As an example, the file name is dummy.pdf and is placed in Download folder.</string>
 </resources>

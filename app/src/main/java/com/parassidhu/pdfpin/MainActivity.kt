@@ -233,6 +233,14 @@ class MainActivity : AppCompatActivity() {
 
     //Adds the selected PDFs to RecyclerView
     private fun addDataToList(listItems: ArrayList<ListItem>) {
+        // Filter Incorrect URIs
+        for (i in listItems.indices) {
+            val uri = listItems[i].path
+            if (uri?.contains("/external_files") == true)
+                listItems[i].path = uri.replace("/external_files", "")
+            listItems[i].path = listItems[i].path?.replace("//", "/")
+        }
+
         num = 0
         pinFiles.text = "Pin File(s)"
         dataAdapter = DataAdapter(this, listItems)
@@ -269,9 +277,6 @@ class MainActivity : AppCompatActivity() {
             Log.d("Data", file.path)
             val pdfIntent = Intent(Intent.ACTION_VIEW)
             var uri = Uri.fromFile(file)
-            if (uri.path.toString().contains("/external_files"))
-                uri = Uri.fromFile(File(uri.path.toString().replace(
-                        "/external_files", "")))
             pdfIntent.setDataAndType(uri, "application/pdf")
 
             Log.d("DataPath", uri.path)
