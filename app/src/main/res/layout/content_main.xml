@@ -16,7 +16,7 @@
         android:layout_weight="2"
         android:fillViewport="true">
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white">
@@ -25,16 +25,18 @@
                 android:id="@+id/chooseBtn"
                 android:layout_width="216dp"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:background="@color/blue"
-                android:elevation="5dp"
+                android:elevation="8dp"
                 android:fontFamily="@font/product_sans_regular"
                 android:text="@string/choose_"
                 android:textColor="@drawable/tab_white"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/centerInfo" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/file_list"
@@ -42,40 +44,40 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/chooseBtn"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="8dp" />
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iconGroup" />
 
             <TextView
                 android:id="@+id/centerInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
                 android:fontFamily="sans-serif-light"
                 android:text="@string/default_text"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/dev"
-                android:layout_marginStart="12dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp"
-                android:fontFamily="@font/product_sans_regular"
-                android:text="@string/oreo_info"
-                android:visibility="gone" />
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <RelativeLayout
                 android:id="@+id/iconGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/file_list"
-                android:layout_centerHorizontal="true">
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/chooseBtn">
 
                 <RadioGroup
                     android:id="@+id/radios"
@@ -129,38 +131,57 @@
                 android:layout_below="@id/iconGroup"
                 android:layout_centerHorizontal="true"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:background="@color/colorPrimary"
                 android:elevation="5dp"
                 android:fontFamily="@font/product_sans_regular"
                 android:text="@string/pin"
                 android:textColor="@drawable/tab_white"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/pinInfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/pinFiles"
-                android:layout_margin="12dp"
-                android:fontFamily="@font/product_sans_regular"
-                android:text="@string/instruction"
-                android:visibility="gone" />
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/file_list" />
 
             <TextView
                 android:id="@+id/dev"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/pinInfo"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="12dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:fontFamily="@font/product_sans_regular"
                 android:text="@string/developer"
                 android:textAllCaps="true"
-                android:visibility="visible" />
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_pinned_shortcut_not_opening" />
 
-        </RelativeLayout>
+            <Button
+                android:id="@+id/btn_pinned_shortcut_not_opening"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:text="Pinned Shortcut Not Opening?"
+                android:background="@color/blue"
+                android:elevation="5dp"
+                android:visibility="invisible"
+                android:fontFamily="@font/product_sans_regular"
+                android:textColor="@drawable/tab_white"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.501"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/pinFiles" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
     <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"

@@ -30,7 +30,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import java.io.File
 
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity() {
 
     private var docPaths = ArrayList<String>()
     private val listItems = ArrayList<ListItem>()
@@ -59,16 +59,24 @@ class MainActivity : AppCompatActivity(){
         } catch (e: Exception) {
         }
         checkIfAppIsLaunchedFromShareMenu()
+        setClickListeners()
+    }
+
+    private fun setClickListeners() {
+        btn_pinned_shortcut_not_opening.setOnClickListener {
+            val intent = Intent(this, Troubleshooting::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun checkIfAppIsLaunchedFromShareMenu() {
         if (intent?.extras == null)
             return
 
-        if  (intent?.action == Intent.ACTION_SEND) {
+        if (intent?.action == Intent.ACTION_SEND) {
             val uri = intent.getParcelableExtra(Intent.EXTRA_STREAM) as Uri
             customLogicForShareMenuFiles(uri, true)
-        } else if (intent?.action == Intent.ACTION_SEND_MULTIPLE){
+        } else if (intent?.action == Intent.ACTION_SEND_MULTIPLE) {
             val list = intent.getParcelableArrayListExtra<Parcelable>(Intent.EXTRA_STREAM)
             docPaths = ArrayList()
             for (i in 0 until list.size) {
@@ -80,10 +88,10 @@ class MainActivity : AppCompatActivity(){
     }
 
     private fun customLogicForShareMenuFiles(uri: Uri, isSingleFile: Boolean) {
-       if (isSingleFile) {
-           docPaths = ArrayList()
-           docPaths.add(uri.path.toString())
-       }
+        if (isSingleFile) {
+            docPaths = ArrayList()
+            docPaths.add(uri.path.toString())
+        }
 
         listItems.clear()
         for (i in docPaths.indices) {
@@ -122,7 +130,7 @@ class MainActivity : AppCompatActivity(){
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
-                                   permissions: Array<String>, grantResults: IntArray) {
+                                            permissions: Array<String>, grantResults: IntArray) {
         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             choosePDF()
         } else {
@@ -186,18 +194,20 @@ class MainActivity : AppCompatActivity(){
     private fun toggleViewsVisibility(`val`: Int) {
         if (`val` == 0) {
             radios.visibility = View.GONE
-            btnPDF1!!.visibility = View.GONE
-            btnPDF2!!.visibility = View.GONE
-            pinFiles!!.visibility = View.GONE
-            centerInfo!!.visibility = View.VISIBLE
-            dev!!.visibility = View.GONE
+            btnPDF1.visibility = View.GONE
+            btnPDF2.visibility = View.GONE
+            pinFiles.visibility = View.GONE
+            centerInfo.visibility = View.VISIBLE
+            dev.visibility = View.GONE
+            btn_pinned_shortcut_not_opening.visibility = View.GONE
         } else {
-            radios!!.visibility = View.VISIBLE
-            btnPDF1!!.visibility = View.VISIBLE
-            btnPDF2!!.visibility = View.VISIBLE
-            pinFiles!!.visibility = View.VISIBLE
-            centerInfo!!.visibility = View.GONE
-            dev!!.visibility = View.VISIBLE
+            radios.visibility = View.VISIBLE
+            btnPDF1.visibility = View.VISIBLE
+            btnPDF2.visibility = View.VISIBLE
+            pinFiles.visibility = View.VISIBLE
+            centerInfo.visibility = View.GONE
+            dev.visibility = View.VISIBLE
+            btn_pinned_shortcut_not_opening.visibility = View.VISIBLE
         }
     }
 
@@ -205,9 +215,9 @@ class MainActivity : AppCompatActivity(){
         when (requestCode) {
             FilePickerConst.REQUEST_CODE_DOC ->
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                docPaths = ArrayList()
-                docPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS))
-            }
+                    docPaths = ArrayList()
+                    docPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS))
+                }
         }
 
         listItems.clear()
@@ -228,40 +238,28 @@ class MainActivity : AppCompatActivity(){
         dataAdapter = DataAdapter(this, listItems)
         file_list.adapter = dataAdapter
 
-        // Show Oreo specific information
-        if (isOreo)
-            info!!.visibility = View.VISIBLE
-
-        pinInfo!!.visibility = View.VISIBLE
-
         if (listItems.size != 0)
             toggleViewsVisibility(1)
         else {
             toggleViewsVisibility(0)
-            info!!.visibility = View.GONE
-            pinInfo!!.visibility = View.GONE
             dev!!.visibility = View.GONE
         }
     }
 
     private fun addShortcut(path1: String, pdfName: String) {
         val file = File(path1)
-        if (Build.VERSION.SDK_INT<26) {
-            if (file.exists()) {
-                val path = Uri.fromFile(file)
-                val shortcutIntent = Intent(Intent.ACTION_VIEW)
-                shortcutIntent.setDataAndTypeAndNormalize(path, "application/pdf")
+        if (Build.VERSION.SDK_INT < 26) {
+            val path = Uri.fromFile(file)
+            val shortcutIntent = Intent(Intent.ACTION_VIEW)
+            shortcutIntent.setDataAndTypeAndNormalize(path, "application/pdf")
 
-                val addIntent = Intent()
-                addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent)
-                addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, pdfName)
-                addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
-                        Intent.ShortcutIconResource.fromContext(applicationContext, image))
-                addIntent.action = "com.android.launcher.action.INSTALL_SHORTCUT"
-                applicationContext.sendBroadcast(addIntent)
-            } else {
-                errorMessage(null)
-            }
+            val addIntent = Intent()
+            addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent)
+            addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, pdfName)
+            addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
+                    Intent.ShortcutIconResource.fromContext(applicationContext, image))
+            addIntent.action = "com.android.launcher.action.INSTALL_SHORTCUT"
+            applicationContext.sendBroadcast(addIntent)
         }
     }
 
