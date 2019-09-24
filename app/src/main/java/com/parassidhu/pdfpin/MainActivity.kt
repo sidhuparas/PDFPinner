@@ -22,7 +22,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.ads.MobileAds
 import droidninja.filepicker.FilePickerBuilder
 import droidninja.filepicker.FilePickerConst
@@ -37,6 +39,9 @@ class MainActivity : AppCompatActivity() {
     private var image: Int = 0
     private var num = 0
     private var dataAdapter: DataAdapter? = null
+    private lateinit var interstitialAd: InterstitialAd
+
+    val FULL_SCREEN_AD_COUNT = "full_screen_ad_count"
 
     private val isOreo: Boolean
         get() = Build.VERSION.SDK_INT > 25
@@ -49,7 +54,16 @@ class MainActivity : AppCompatActivity() {
         initViews()
         initAds()
         pinDynamicShortcut()
+        initialize(this)
+
         // Check if the app is opened using long-press shortcut menu
+        checkIfDynamicShortcutIsTapped()
+
+        checkIfAppIsLaunchedFromShareMenu()
+        setClickListeners()
+    }
+
+    private fun checkIfDynamicShortcutIsTapped() {
         try {
             val intent = intent
             if (intent.extras != null) {
@@ -58,8 +72,6 @@ class MainActivity : AppCompatActivity() {
             }
         } catch (e: Exception) {
         }
-        checkIfAppIsLaunchedFromShareMenu()
-        setClickListeners()
     }
 
     private fun setClickListeners() {
@@ -80,7 +92,7 @@ class MainActivity : AppCompatActivity() {
             val list = intent.getParcelableArrayListExtra<Parcelable>(Intent.EXTRA_STREAM)
             docPaths = ArrayList()
             for (i in 0 until list.size) {
-                val uriString = (list[i] as Uri).path.toString()
+                val uriString = (list[i] as? Uri)?.path.toString()
                 docPaths.add(uriString)
             }
             customLogicForShareMenuFiles(list[0] as Uri, false)
@@ -100,7 +112,16 @@ class MainActivity : AppCompatActivity() {
                     path.substring(path.indexOf(":") + 1)
             // Example: root/DCIM/Pictures/IMG_8004.JPG
             Log.d("Data", path)
-            val name = path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."))
+
+            var name: String
+            try {
+                name = path.substring(path.lastIndexOf("/") + 1,
+                        path.lastIndexOf("."))
+            } catch (e: java.lang.Exception) {
+                Toast.makeText(this, "There's an error: ${e.message}",
+                        Toast.LENGTH_SHORT).show()
+                return
+            }
 
             listItems.add(ListItem(newPath, name))
         }
@@ -149,6 +170,7 @@ class MainActivity : AppCompatActivity() {
         toggleViewsVisibility(0)
 
         pinFiles.setOnClickListener {
+            handleInterstitialAd()
             if (!isOreo) {
                 for (i in listItems.indices) {
                     addShortcut(listItems[i].path.toString(), listItems[i].name.toString())
@@ -164,6 +186,19 @@ class MainActivity : AppCompatActivity() {
                 R.drawable.pdf
             else
                 R.drawable.pdf2
+        }
+    }
+
+    private fun handleInterstitialAd() {
+        val numOfTimes = getIntValue(FULL_SCREEN_AD_COUNT, 0)
+        if (numOfTimes > 2) {
+            if (interstitialAd.isLoaded) {
+                interstitialAd.show()
+            }
+            saveOffline(FULL_SCREEN_AD_COUNT, 0)
+            Log.d("MainActivity: ", "Yeah: $numOfTimes")
+        } else {
+            saveOffline(FULL_SCREEN_AD_COUNT, numOfTimes + 1)
         }
     }
 
@@ -354,8 +389,20 @@ class MainActivity : AppCompatActivity() {
     private fun initAds() {
         MobileAds.initialize(this, BuildConfig.BANNER_KEY)
 
-        val adRequest = AdRequest.Builder().build()
+        val adRequest = AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build()
+
         adView.loadAd(adRequest)
+
+        interstitialAd = InterstitialAd(this)
+        interstitialAd.adUnitId = BuildConfig.INTERSTITIAL_KEY
+
+        val request = AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build()
+
+        interstitialAd.loadAd(request)
     }
 
     // This is a Nougat specific shortcut which is shown on long press of app shortcut

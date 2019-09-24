@@ -117,9 +117,9 @@
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_below="@id/radios"
-                    android:layout_marginLeft="70dp"
+                    android:layout_marginStart="70dp"
                     android:layout_marginTop="12dp"
-                    android:layout_toRightOf="@id/btnPDF1"
+                    android:layout_toEndOf="@id/btnPDF1"
                     android:background="@drawable/pdf2" />
 
             </RelativeLayout>
@@ -133,7 +133,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
-                android:background="@color/colorPrimary"
+                android:background="@drawable/ripple"
                 android:elevation="5dp"
                 android:fontFamily="@font/product_sans_regular"
                 android:text="@string/pin"

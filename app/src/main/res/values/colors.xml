@@ -7,5 +7,6 @@
     <color name="white1">#e4dfdf</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
+    <color name="highlight_light">#33ffffff</color> <!-- 20% white -->
 
 </resources>

@@ -16,14 +16,17 @@ android {
     androidExtensions {
         experimental = true
     }
+
+    defaultConfig {
+        buildConfigField 'String', 'BANNER_KEY', PDF_PINNER_BANNER_AD
+        resValue 'string', 'banner_key', PDF_PINNER_BANNER_AD
+        buildConfigField 'String', 'INTERSTITIAL_KEY', PDF_PINNER_INTERSTITIAL_AD
+        resValue 'string', 'interstitial_key', PDF_PINNER_INTERSTITIAL_AD
+    }
+
     buildTypes {
-        debug {
-            buildConfigField 'String', 'BANNER_KEY', PDF_PINNER_BANNER_AD
-            resValue 'string', 'banner_key', PDF_PINNER_BANNER_AD
-        }
+        debug {}
         release {
-            buildConfigField 'String', 'BANNER_KEY', PDF_PINNER_BANNER_AD
-            resValue 'string', 'banner_key', PDF_PINNER_BANNER_AD
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -34,8 +37,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'com.google.android.material:material:1.0.0'
-    implementation 'com.google.firebase:firebase-core:17.0.1'
-    implementation 'com.google.firebase:firebase-messaging:19.0.1'
+    implementation 'com.google.firebase:firebase-core:17.1.0'
+    implementation 'com.google.firebase:firebase-messaging:20.0.0'
 
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     testImplementation 'junit:junit:4.12'
