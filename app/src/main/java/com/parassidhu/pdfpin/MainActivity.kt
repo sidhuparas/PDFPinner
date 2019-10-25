@@ -22,7 +22,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.gms.ads.AdListener
+import com.anjlab.android.iab.v3.BillingProcessor
+import com.anjlab.android.iab.v3.TransactionDetails
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.ads.MobileAds
@@ -32,7 +33,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import java.io.File
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
 
     private var docPaths = ArrayList<String>()
     private val listItems = ArrayList<ListItem>()
@@ -40,8 +41,9 @@ class MainActivity : AppCompatActivity() {
     private var num = 0
     private var dataAdapter: DataAdapter? = null
     private lateinit var interstitialAd: InterstitialAd
+    private lateinit var billingProcessor: BillingProcessor
 
-    val FULL_SCREEN_AD_COUNT = "full_screen_ad_count"
+    private val FULL_SCREEN_AD_COUNT = "full_screen_ad_count"
 
     private val isOreo: Boolean
         get() = Build.VERSION.SDK_INT > 25
@@ -49,18 +51,19 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
-        title = ""
-        initViews()
-        initAds()
-        pinDynamicShortcut()
         initialize(this)
+        init()
+
+        if (getShowAds()) initAds()
+        pinDynamicShortcut()
 
         // Check if the app is opened using long-press shortcut menu
         checkIfDynamicShortcutIsTapped()
 
         checkIfAppIsLaunchedFromShareMenu()
         setClickListeners()
+
+        //BillingManager.startBillingFlow(this)
     }
 
     private fun checkIfDynamicShortcutIsTapped() {
@@ -118,8 +121,7 @@ class MainActivity : AppCompatActivity() {
                 name = path.substring(path.lastIndexOf("/") + 1,
                         path.lastIndexOf("."))
             } catch (e: java.lang.Exception) {
-                Toast.makeText(this, "There's an error: ${e.message}",
-                        Toast.LENGTH_SHORT).show()
+                toast("There's an error: ${e.message}")
                 return
             }
 
@@ -155,14 +157,20 @@ class MainActivity : AppCompatActivity() {
         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             choosePDF()
         } else {
-            Toast.makeText(this,
-                    """Permissions for accessing External Storage not granted! To choose a PDF file, it's required.
-                            "Please go to Settings->Apps to grant Storage permission.""", Toast.LENGTH_SHORT).show()
+            toast("""Permissions for accessing External Storage not granted! To choose a PDF file, it's required.
+                            "Please go to Settings->Apps to grant Storage permission.""")
         }
     }
 
     //Initializes all the mess. btnPDFx represents both icons.
-    private fun initViews() {
+    private fun init() {
+        setSupportActionBar(toolbar)
+        title = ""
+
+        billingProcessor = BillingProcessor.newBillingProcessor(this,
+                BuildConfig.PLAY_KEY, this)
+        billingProcessor.initialize()
+
         file_list.layoutManager = LinearLayoutManager(this)
         image = R.drawable.pdf
 
@@ -175,7 +183,7 @@ class MainActivity : AppCompatActivity() {
                 for (i in listItems.indices) {
                     addShortcut(listItems[i].path.toString(), listItems[i].name.toString())
                 }
-                Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show()
+                toast("Success!")
             } else {
                 oneByOne()
             }
@@ -222,7 +230,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun successMessage() {
-        Toast.makeText(this, "All selected files have been pinned!", Toast.LENGTH_SHORT).show()
+        toast("All selected files have been pinned!")
     }
 
     //Custom toggleViewsVisibility to set views' visibility
@@ -247,6 +255,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (!billingProcessor.handleActivityResult(requestCode, resultCode, data))
+            super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             FilePickerConst.REQUEST_CODE_DOC ->
                 if (resultCode == Activity.RESULT_OK && data != null) {
@@ -344,9 +354,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun errorMessage(e: Exception?) {
         if (e != null)
-            Toast.makeText(this, "Some error occurred: " + e.message, Toast.LENGTH_SHORT).show()
+            toast("Some error occurred: " + e.message)
         else
-            Toast.makeText(this, "Some error occurred!", Toast.LENGTH_SHORT).show()
+            toast("Some error occurred!")
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -358,29 +368,34 @@ class MainActivity : AppCompatActivity() {
         val id = item.itemId
 
         // Rate and Review is clicked
-        if (id == R.id.action_settings) {
-            val uri = Uri.parse("market://details?id=" + applicationContext.packageName)
-            val goToMarket = Intent(Intent.ACTION_VIEW, uri)
-            goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY or
-                    Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
-                    Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-            try {
-                startActivity(goToMarket)
-            } catch (e: ActivityNotFoundException) {
-                startActivity(Intent(Intent.ACTION_VIEW,
-                        Uri.parse("http://play.google.com/store/apps/details?id=" + applicationContext.packageName)))
-            }
+        when (id) {
+            R.id.action_settings -> {
+                val uri = Uri.parse("market://details?id=" + applicationContext.packageName)
+                val goToMarket = Intent(Intent.ACTION_VIEW, uri)
+                goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY or
+                        Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
+                        Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+                try {
+                    startActivity(goToMarket)
+                } catch (e: ActivityNotFoundException) {
+                    startActivity(Intent(Intent.ACTION_VIEW,
+                            Uri.parse("http://play.google.com/store/apps/details?id=" + applicationContext.packageName)))
+                }
 
-            return true
-        } else if (id == R.id.privacy) {
-            val uri = Uri.parse(
-                    "https://docs.google.com/document/d/1WU1hg3PmqMPhVEQuS-Um4mgIMTc9L5KhZZTC6gxEwao/edit")
-            val intent = Intent(Intent.ACTION_VIEW, uri)
-            try {
-                startActivity(intent)
-            } catch (ignored: Exception) {
+                return true
             }
-
+            R.id.privacy -> {
+                val uri = Uri.parse(getString(R.string.privacy_url))
+                val intent = Intent(Intent.ACTION_VIEW, uri)
+                try {
+                    startActivity(intent)
+                } catch (ignored: Exception) {
+                }
+            }
+            R.id.go_ad_free -> {
+                billingProcessor.purchase(this, "ad_free")
+                return true
+            }
         }
 
         return super.onOptionsItemSelected(item)
@@ -391,6 +406,7 @@ class MainActivity : AppCompatActivity() {
 
         val adRequest = AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice("4AD76DBC69C8AE7FD181B7F6578B12B7")
                 .build()
 
         adView.loadAd(adRequest)
@@ -400,6 +416,7 @@ class MainActivity : AppCompatActivity() {
 
         val request = AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice("4AD76DBC69C8AE7FD181B7F6578B12B7")
                 .build()
 
         interstitialAd.loadAd(request)
@@ -428,6 +445,26 @@ class MainActivity : AppCompatActivity() {
             // Ask the service to pin the shortcut
             shortcutManager.dynamicShortcuts = listOf(shortcut)
         }
+    }
+
+    override fun onBillingInitialized() {}
+
+    override fun onPurchaseHistoryRestored() {}
+
+    override fun onProductPurchased(productId: String, details: TransactionDetails?) {
+        setShowAds(false)
+        //billingProcessor.consumePurchase(productId)
+        toast("You have gone ad-free! Ads will be removed on app restart.")
+    }
+
+    override fun onBillingError(errorCode: Int, error: Throwable?) {
+        Toast.makeText(this, "Error: ($errorCode): ${error?.message}"
+                , Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onDestroy() {
+        billingProcessor.release()
+        super.onDestroy()
     }
 
     companion object {

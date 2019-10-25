@@ -23,4 +23,6 @@
     <string name="how_to_solve">To solve the issue, you need to edit the file URI manually. This isn\'t difficult considering the fact that URI is just a format of file path.\n\nWhen selecting the file in main interface, press the file icon besides the pencil icon. Then check if the file path is similar to what\'s shown there. Edit as per the requirement.</string>
     <string name="pinned_shortcut_not_opening">Pinned Shortcut Not Opening?</string>
     <string name="examples">Correct Format: /storage/emulated/0/Download/dummy.pdf\n\nIncorrect Format: /storage/emulated//0/Download/dummy.pdf (Double slashes)\n\nURI normally starts with /storage. After \"0/\", actual folder and file name follows as can be seen in the example above. As an example, the file name is dummy.pdf and is placed in Download folder.</string>
+    <string name="ad_free">Go Ad-Free</string>
+    <string name="privacy_url">https://docs.google.com/document/d/1WU1hg3PmqMPhVEQuS-Um4mgIMTc9L5KhZZTC6gxEwao/edit</string>
 </resources>

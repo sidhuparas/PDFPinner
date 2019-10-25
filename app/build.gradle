@@ -11,6 +11,7 @@ android {
         targetSdkVersion 28
         versionCode 15
         versionName "1.5"
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     androidExtensions {
@@ -22,6 +23,8 @@ android {
         resValue 'string', 'banner_key', PDF_PINNER_BANNER_AD
         buildConfigField 'String', 'INTERSTITIAL_KEY', PDF_PINNER_INTERSTITIAL_AD
         resValue 'string', 'interstitial_key', PDF_PINNER_INTERSTITIAL_AD
+        buildConfigField 'String', 'PLAY_KEY', PLAY_KEY
+        resValue 'string', 'app_key', PDF_PINNER_APP_KEY
     }
 
     buildTypes {
@@ -35,9 +38,9 @@ android {
 // Don't update to 28 till Library bug is fixed
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.material:material:1.0.0'
-    implementation 'com.google.firebase:firebase-core:17.1.0'
+    implementation 'com.google.firebase:firebase-core:17.2.0'
     implementation 'com.google.firebase:firebase-messaging:20.0.0'
 
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
@@ -47,10 +50,12 @@ dependencies {
 
     //implementation 'com.github.tiagohm:MaterialFileChooser:0.2.0'
     implementation 'com.yarolegovich:lovely-dialog:1.0.7'
-    implementation 'com.google.android.gms:play-services-ads:18.1.1'
+    implementation 'com.google.android.gms:play-services-ads:18.2.0'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     implementation 'com.droidninja:filepicker:2.2.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    implementation 'com.anjlab.android.iab.v3:library:1.0.44'
 }
 
 apply plugin: 'com.google.gms.google-services'
