@@ -2,6 +2,7 @@ package com.parassidhu.pdfpin
 
 import android.Manifest
 import android.app.Activity
+import android.app.PendingIntent.getActivity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -21,6 +22,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.anjlab.android.iab.v3.BillingProcessor
 import com.anjlab.android.iab.v3.TransactionDetails
@@ -120,7 +122,8 @@ class MainActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
             try {
                 name = path.substring(path.lastIndexOf("/") + 1,
                         path.lastIndexOf("."))
-            } catch (e: java.lang.Exception) {
+                //name = path
+            } catch (e: Exception) {
                 toast("There's an error: ${e.message}")
                 return
             }
@@ -321,8 +324,17 @@ class MainActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
         try {
             Log.d("Data", file.path)
             val pdfIntent = Intent(Intent.ACTION_VIEW)
-            var uri = Uri.fromFile(file)
+
+            val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                FileProvider.getUriForFile(this,
+                        applicationContext.packageName + ".provider", file)
+            } else {
+                Uri.fromFile(file)
+            }
+
+            //val uri = Uri.fromFile(file)
             pdfIntent.setDataAndType(uri, "application/pdf")
+            pdfIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
             Log.d("DataPath", uri.path)
             Log.d("DataPath", pdfName)
@@ -365,10 +377,9 @@ class MainActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
 
         // Rate and Review is clicked
-        when (id) {
+        when (item.itemId) {
             R.id.action_settings -> {
                 val uri = Uri.parse("market://details?id=" + applicationContext.packageName)
                 val goToMarket = Intent(Intent.ACTION_VIEW, uri)
