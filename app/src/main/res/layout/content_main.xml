@@ -32,7 +32,7 @@
                 android:elevation="8dp"
                 android:fontFamily="@font/product_sans_regular"
                 android:text="@string/choose_"
-                android:textColor="@drawable/tab_white"
+                android:textColor="@color/white"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -137,7 +137,7 @@
                 android:elevation="5dp"
                 android:fontFamily="@font/product_sans_regular"
                 android:text="@string/pin"
-                android:textColor="@drawable/tab_white"
+                android:textColor="@color/white"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.497"
@@ -158,36 +158,8 @@
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btn_pinned_shortcut_not_opening" />
-
-            <Button
-                android:id="@+id/btn_pinned_shortcut_not_opening"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="8dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:text="@string/pinned_shortcut_not_opening"
-                android:background="@color/blue"
-                android:elevation="5dp"
-                android:visibility="invisible"
-                android:fontFamily="@font/product_sans_regular"
-                android:textColor="@drawable/tab_white"
-                android:textSize="18sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.501"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/pinFiles" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/adView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/banner_key" />
 </LinearLayout>

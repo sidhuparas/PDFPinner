@@ -34,20 +34,8 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="3dp"
         android:layout_marginEnd="10dp"
-        android:layout_toLeftOf="@id/path"
+        android:layout_alignParentEnd="true"
         android:background="@drawable/custom_bg"
         android:src="@drawable/edit"
         android:contentDescription="@string/edit" />
-
-    <ImageButton
-        android:id="@+id/path"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="3dp"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/custom_bg"
-        android:src="@drawable/ic_folder"
-        android:contentDescription="@string/edit_path" />
 </RelativeLayout>

@@ -1,19 +1,26 @@
 <resources>
     <string name="app_name">PDF Pinner</string>
-    <string name="action_settings">Settings</string>
     <string name="rate_and_review">Rate and Review</string>
-    <string name="choose_">Choose File(s)</string>
-    <string name="default_text">Select some files to get started...</string>
-    <string name="oreo_info">INFORMATION: Since you\'re using Android 8.0 or higher, you need to pin shortcuts one-by-one due to restriction by the OS.</string>
+    <string name="choose_">Choose PDF Files</string>
+    <string name="default_text">Select PDF files to create launcher shortcuts.</string>
     <string name="blue">Blue Icon</string>
     <string name="red">Red Icon</string>
     <string name="pin">Pin File(s)</string>
-    <string name="instruction">Please note that you can\'t pin same shortcut twice with different icons.</string>
     <string name="developer">Developed By Paras Singh Sidhu</string>
     <string name="pin_next">Pin Next File</string>
     <string name="edit">Edit Name</string>
-    <string name="edit_path">Edit Path</string>
     <string name="privacy_amp_policy">Privacy Policy</string>
+    <string name="choose_shortcut">Choose File(s)</string>
+    <string name="no_shortcut_support">This launcher does not support pinned shortcuts.</string>
+    <string name="no_pdf_viewer">No PDF viewer found on this device.</string>
+    <string name="pdf_permission_missing">The selected PDF is no longer accessible. Choose it again to recreate the shortcut.</string>
+    <string name="pdf_open_failed">Unable to open this PDF.</string>
+    <string name="link_open_failed">Unable to open this link.</string>
+    <string name="picked_files_added">PDFs ready to pin.</string>
+    <string name="all_files_pinned">All selected files have been pinned.</string>
+    <string name="pin_success_legacy">Shortcut request sent.</string>
+    <string name="share_import_warning">This shared PDF may stop working if the source app revokes access.</string>
+    <string name="shortcut_target_missing">This shortcut is missing its PDF reference.</string>
 
     <string name="what_is_the_problem">If you\'re adding PDF files to home screen and getting an error that file can\'t be opened, we have a fix for you.</string>
     <string name="what_is_the_problem_title">What is the Problem?</string>
@@ -23,6 +30,5 @@
     <string name="how_to_solve">To solve the issue, you need to edit the file URI manually. This isn\'t difficult considering the fact that URI is just a format of file path.\n\nWhen selecting the file in main interface, press the file icon besides the pencil icon. Then check if the file path is similar to what\'s shown there. Edit as per the requirement.</string>
     <string name="pinned_shortcut_not_opening">Pinned Shortcut Not Opening?</string>
     <string name="examples">Correct Format: /storage/emulated/0/Download/dummy.pdf\n\nIncorrect Format: /storage/emulated//0/Download/dummy.pdf (Double slashes)\n\nURI normally starts with /storage. After \"0/\", actual folder and file name follows as can be seen in the example above. As an example, the file name is dummy.pdf and is placed in Download folder.</string>
-    <string name="ad_free">Go Ad-Free</string>
     <string name="privacy_url">https://docs.google.com/document/d/1WU1hg3PmqMPhVEQuS-Um4mgIMTc9L5KhZZTC6gxEwao/edit</string>
 </resources>

@@ -1,3 +1,6 @@
 package com.parassidhu.pdfpin
 
-class ListItem(var path: String?, var name: String?)
+data class ListItem(
+    val uriString: String,
+    var name: String
+)

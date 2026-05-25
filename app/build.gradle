@@ -1,64 +1,52 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'io.fabric'
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
 
 android {
-    compileSdkVersion 28
-    defaultConfig {
-        applicationId "com.parassidhu.pdfpin"
-        minSdkVersion 17
-        targetSdkVersion 28
-        versionCode 15
-        versionName "1.5"
-        multiDexEnabled true
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
-    androidExtensions {
-        experimental = true
-    }
+    namespace 'com.parassidhu.pdfpin'
+    compileSdk 36
 
     defaultConfig {
-        buildConfigField 'String', 'BANNER_KEY', PDF_PINNER_BANNER_AD
-        resValue 'string', 'banner_key', PDF_PINNER_BANNER_AD
-        buildConfigField 'String', 'INTERSTITIAL_KEY', PDF_PINNER_INTERSTITIAL_AD
-        resValue 'string', 'interstitial_key', PDF_PINNER_INTERSTITIAL_AD
-        buildConfigField 'String', 'PLAY_KEY', PLAY_KEY
-        resValue 'string', 'app_key', PDF_PINNER_APP_KEY
+        applicationId "com.parassidhu.pdfpin"
+        minSdk 21
+        targetSdk 36
+        versionCode 16
+        versionName "1.6"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         debug {}
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
 }
-// Don't update to 28 till Library bug is fixed
+
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation 'com.google.firebase:firebase-core:17.2.0'
-    implementation 'com.google.firebase:firebase-messaging:20.0.0'
+    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.activity:activity-ktx:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
 
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-
-    //implementation 'com.github.tiagohm:MaterialFileChooser:0.2.0'
-    implementation 'com.yarolegovich:lovely-dialog:1.0.7'
-    implementation 'com.google.android.gms:play-services-ads:18.2.0'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
-    implementation 'com.droidninja:filepicker:2.2.1'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
-    implementation 'com.anjlab.android.iab.v3:library:1.0.44'
-}
-
-apply plugin: 'com.google.gms.google-services'
-repositories {
-    mavenCentral()
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 }

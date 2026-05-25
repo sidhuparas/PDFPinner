@@ -1,62 +1,58 @@
 package com.parassidhu.pdfpin
 
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
+import android.text.InputType
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import com.yarolegovich.lovelydialog.LovelyTextInputDialog
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.row_layout.*
-import java.util.*
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.RecyclerView
+import com.parassidhu.pdfpin.databinding.RowLayoutBinding
 
-class DataAdapter(private val context: Context, private val listItems: ArrayList<ListItem>)
-    : RecyclerView.Adapter<DataAdapter.ViewHolder>() {
+class DataAdapter(
+    private val context: Context,
+    private val listItems: List<ListItem>
+) : RecyclerView.Adapter<DataAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
-        val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.row_layout, viewGroup, false)
-        return ViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding = RowLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        viewHolder.bind(i)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(position)
     }
 
-    override fun getItemCount(): Int {
-        return listItems.size
-    }
+    override fun getItemCount(): Int = listItems.size
 
-    inner class ViewHolder(override val containerView: View?)
-        : RecyclerView.ViewHolder(containerView!!), LayoutContainer {
+    inner class ViewHolder(private val binding: RowLayoutBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(i: Int) {
-            filename.text = listItems[i].name
+        fun bind(position: Int) {
+            val item = listItems[position]
+            binding.filename.text = item.name
+            binding.edit.setOnClickListener { showRenameDialog(item) }
+        }
 
-            edit.setOnClickListener {
-                LovelyTextInputDialog(context)
-                        .setTopColorRes(R.color.blue)
-                        .setTitle("Rename")
-                        .setInitialInput(filename.text.toString())
-                        .setConfirmButton(android.R.string.ok) { text ->
-                            if (text.isNotEmpty()) {
-                                listItems[adapterPosition].name = text
-                                filename.text = listItems[adapterPosition].name
-                            }
-                        }
-                        .show()
+        private fun showRenameDialog(item: ListItem) {
+            val input = EditText(context).apply {
+                setText(item.name)
+                inputType = InputType.TYPE_CLASS_TEXT
+                setSelection(text.length)
             }
 
-            path.setOnClickListener {
-                LovelyTextInputDialog(context)
-                        .setTopColorRes(R.color.blue)
-                        .setTitle("Edit Path")
-                        .setInitialInput(listItems[i].path)
-                        .setMessage("Only edit this if pinned shortcut is not working.")
-                        .setConfirmButton(android.R.string.ok) { text ->
-                            listItems[adapterPosition].path = text
-                        }
-                        .show()
-            }
+            AlertDialog.Builder(context)
+                .setTitle("Rename")
+                .setView(input)
+                .setPositiveButton(android.R.string.ok) { _, _ ->
+                    val updatedName = input.text?.toString()?.trim().orEmpty()
+                    if (updatedName.isNotEmpty()) {
+                        item.name = updatedName
+                        binding.filename.text = updatedName
+                    }
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
         }
     }
 }
