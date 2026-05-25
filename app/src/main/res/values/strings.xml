@@ -21,6 +21,23 @@
     <string name="pin_success_legacy">Shortcut request sent.</string>
     <string name="share_import_warning">This shared PDF may stop working if the source app revokes access.</string>
     <string name="shortcut_target_missing">This shortcut is missing its PDF reference.</string>
+    <string name="hero_badge">LAUNCHER READY</string>
+    <string name="hero_title">Pin your most-used PDFs</string>
+    <string name="hero_summary">Turn your next document into a clean home-screen shortcut in a few taps.</string>
+    <string name="toolbar_title">PDF Pinner</string>
+    <string name="toolbar_subtitle">Quick access for the files you revisit</string>
+    <string name="files_title">Selected PDFs</string>
+    <string name="files_summary">Rename the shortcut label before pinning if you want something shorter.</string>
+    <string name="appearance_title">Choose an icon accent</string>
+    <string name="appearance_summary">Pick the shortcut style you want to see on the launcher.</string>
+    <string name="preview_blue_label">Blue badge</string>
+    <string name="preview_red_label">Red badge</string>
+    <string name="pin_note">Android may ask you to confirm each shortcut.</string>
+    <string name="shortcut_name_hint">Shortcut label</string>
+    <string name="icon_cobalt">Cobalt</string>
+    <string name="icon_coral">Coral</string>
+    <string name="icon_emerald">Emerald</string>
+    <string name="icon_charcoal">Charcoal</string>
 
     <string name="what_is_the_problem">If you\'re adding PDF files to home screen and getting an error that file can\'t be opened, we have a fix for you.</string>
     <string name="what_is_the_problem_title">What is the Problem?</string>

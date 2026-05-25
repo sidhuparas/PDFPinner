@@ -1,41 +1,79 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="2dp"
-    android:layout_marginTop="5dp"
-    android:layout_marginRight="2dp"
-    android:layout_marginBottom="5dp"
-    android:background="@drawable/custom_bg"
-    android:clickable="true"
-    android:focusable="true">
+    android:layout_marginTop="8dp"
+    app:cardBackgroundColor="@color/surface_strong"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="0dp"
+    app:strokeColor="@color/border_soft"
+    app:strokeWidth="1dp">
 
-    <TextView
-        android:id="@+id/filename"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="4dp"
-        android:layout_toStartOf="@id/edit"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:fontFamily="@font/product_sans_regular"
-        tools:text="File name" />
+        android:gravity="center_vertical"
+        android:minHeight="78dp"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingTop="14dp"
+        android:paddingEnd="14dp"
+        android:paddingBottom="14dp">
 
-    <ImageButton
-        android:id="@+id/edit"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="3dp"
-        android:layout_marginEnd="10dp"
-        android:layout_alignParentEnd="true"
-        android:background="@drawable/custom_bg"
-        android:src="@drawable/edit"
-        android:contentDescription="@string/edit" />
-</RelativeLayout>
+        <FrameLayout
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/toolbar_badge_bg">
+
+            <ImageView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_gravity="center"
+                android:contentDescription="@null"
+                android:src="@drawable/pdf" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/filename"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/product_sans_regular"
+                android:maxLines="1"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                tools:text="Project notes" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/product_sans_regular"
+                android:maxLines="1"
+                android:text="@string/shortcut_name_hint"
+                android:textColor="@color/text_muted"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/edit"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/edit_button_bg"
+            android:contentDescription="@string/edit"
+            android:padding="10dp"
+            android:src="@drawable/edit"
+            app:tint="@color/colorPrimary" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -21,9 +21,12 @@ import java.util.UUID
 
 class MainActivity : AppCompatActivity() {
 
+    private data class IconOption(val view: View, val iconResId: Int)
+
     private lateinit var binding: ActivityMainBinding
     private val listItems = mutableListOf<ListItem>()
     private lateinit var dataAdapter: DataAdapter
+    private lateinit var iconOptions: List<IconOption>
     private var iconResId: Int = R.drawable.pdf
     private var nextPinIndex = 0
 
@@ -61,15 +64,25 @@ class MainActivity : AppCompatActivity() {
 
         binding.content.chooseBtn.setOnClickListener { openDocumentPicker() }
         binding.content.pinFiles.setOnClickListener { pinSelectedFiles() }
-        binding.content.blueIcon.setOnCheckedChangeListener { _, _ ->
-            iconResId = if (binding.content.blueIcon.isChecked) {
-                R.drawable.pdf
-            } else {
-                R.drawable.pdf2
-            }
+        iconOptions = listOf(
+            IconOption(binding.content.iconOptionBlue, R.drawable.pdf),
+            IconOption(binding.content.iconOptionCoral, R.drawable.pdf2),
+            IconOption(binding.content.iconOptionEmerald, R.drawable.pdf3),
+            IconOption(binding.content.iconOptionCharcoal, R.drawable.pdf4)
+        )
+        iconOptions.forEach { option ->
+            option.view.setOnClickListener { selectIcon(option.iconResId) }
         }
+        selectIcon(R.drawable.pdf)
 
         toggleViewsVisibility(showFiles = false)
+    }
+
+    private fun selectIcon(selectedIconResId: Int) {
+        iconResId = selectedIconResId
+        iconOptions.forEach { option ->
+            option.view.isSelected = option.iconResId == selectedIconResId
+        }
     }
 
     private fun handleIncomingIntent(incomingIntent: Intent?) {
@@ -230,11 +243,10 @@ class MainActivity : AppCompatActivity() {
     private fun toggleViewsVisibility(showFiles: Boolean) {
         val content = binding.content
         val visibility = if (showFiles) View.VISIBLE else View.GONE
-        content.fileList.visibility = visibility
-        content.radios.visibility = visibility
-        content.btnPDF1.visibility = visibility
-        content.btnPDF2.visibility = visibility
+        content.filesPanel.visibility = visibility
+        content.appearancePanel.visibility = visibility
         content.pinFiles.visibility = visibility
+        content.pinNote.visibility = visibility
         content.dev.visibility = visibility
         content.centerInfo.visibility = if (showFiles) View.GONE else View.VISIBLE
     }

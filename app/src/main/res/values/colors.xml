@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#F44336</color>
-    <color name="colorPrimaryDark">#D32F2F</color>
-    <color name="colorAccent">#FF5252</color>
-    <color name="blue">#1e88e5</color>
-    <color name="white1">#e4dfdf</color>
+    <color name="colorPrimary">#EB5A46</color>
+    <color name="colorPrimaryDark">#B64033</color>
+    <color name="colorAccent">#2F6DF6</color>
+    <color name="blue">#2F6DF6</color>
+    <color name="white1">#E9DCC8</color>
     <color name="white">#ffffff</color>
-    <color name="black">#000000</color>
+    <color name="black">#1D1B16</color>
     <color name="highlight_light">#33ffffff</color> <!-- 20% white -->
-
+    <color name="bg_canvas">#F5EDE2</color>
+    <color name="bg_wash">#FFF8F0</color>
+    <color name="surface">#FFFCF7</color>
+    <color name="surface_alt">#F2E5D5</color>
+    <color name="surface_strong">#FFF3E3</color>
+    <color name="border_soft">#E6D4BF</color>
+    <color name="text_muted">#6C6256</color>
+    <color name="hero_start">#FF8E72</color>
+    <color name="hero_end">#E74C3C</color>
+    <color name="badge_bg">#26FFFFFF</color>
+    <color name="accent_red_soft">#FFE3DD</color>
+    <color name="accent_blue_soft">#E4ECFF</color>
+    <color name="shadow_soft">#14000000</color>
 </resources>
