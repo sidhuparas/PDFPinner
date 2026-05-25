@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">PDF Pinner</string>
     <string name="rate_and_review">Rate and Review</string>
-    <string name="choose_">Choose PDF Files</string>
-    <string name="default_text">Select PDF files to create launcher shortcuts.</string>
+    <string name="choose_">Choose Files</string>
+    <string name="default_text">Select files to create launcher shortcuts.</string>
     <string name="blue">Blue Icon</string>
     <string name="red">Red Icon</string>
     <string name="pin">Pin File(s)</string>
@@ -12,21 +12,21 @@
     <string name="privacy_amp_policy">Privacy Policy</string>
     <string name="choose_shortcut">Choose File(s)</string>
     <string name="no_shortcut_support">This launcher does not support pinned shortcuts.</string>
-    <string name="no_pdf_viewer">No PDF viewer found on this device.</string>
-    <string name="pdf_permission_missing">The selected PDF is no longer accessible. Choose it again to recreate the shortcut.</string>
-    <string name="pdf_open_failed">Unable to open this PDF.</string>
+    <string name="no_file_viewer">No app found to open this file type.</string>
+    <string name="file_permission_missing">The selected file is no longer accessible. Choose it again to recreate the shortcut.</string>
+    <string name="file_open_failed">Unable to open this file.</string>
     <string name="link_open_failed">Unable to open this link.</string>
-    <string name="picked_files_added">PDFs ready to pin.</string>
+    <string name="picked_files_added">Files ready to pin.</string>
     <string name="all_files_pinned">All selected files have been pinned.</string>
     <string name="pin_success_legacy">Shortcut request sent.</string>
-    <string name="share_import_warning">This shared PDF may stop working if the source app revokes access.</string>
-    <string name="shortcut_target_missing">This shortcut is missing its PDF reference.</string>
+    <string name="share_import_warning">This shared file may stop working if the source app revokes access.</string>
+    <string name="shortcut_target_missing">This shortcut is missing its file reference.</string>
     <string name="hero_badge">LAUNCHER READY</string>
-    <string name="hero_title">Pin your most-used PDFs</string>
-    <string name="hero_summary">Turn your next document into a clean home-screen shortcut in a few taps.</string>
+    <string name="hero_title">Pin your most-used files</string>
+    <string name="hero_summary">Turn your next document, archive, image, or media file into a home-screen shortcut.</string>
     <string name="toolbar_title">PDF Pinner</string>
     <string name="toolbar_subtitle">Quick access for the files you revisit</string>
-    <string name="files_title">Selected PDFs</string>
+    <string name="files_title">Selected files</string>
     <string name="files_summary">Rename the shortcut label before pinning if you want something shorter.</string>
     <string name="appearance_title">Choose an icon accent</string>
     <string name="appearance_summary">Pick the shortcut style you want to see on the launcher.</string>
@@ -38,6 +38,9 @@
     <string name="icon_coral">Coral</string>
     <string name="icon_emerald">Emerald</string>
     <string name="icon_charcoal">Charcoal</string>
+    <string name="icon_sand">Sand</string>
+    <string name="icon_graphite">Graphite</string>
+    <string name="file_type_generic">Any file</string>
 
     <string name="what_is_the_problem">If you\'re adding PDF files to home screen and getting an error that file can\'t be opened, we have a fix for you.</string>
     <string name="what_is_the_problem_title">What is the Problem?</string>

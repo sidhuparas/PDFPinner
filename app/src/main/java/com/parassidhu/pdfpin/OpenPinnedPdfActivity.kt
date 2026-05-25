@@ -17,6 +17,7 @@ class OpenPinnedPdfActivity : AppCompatActivity() {
     private fun openPinnedPdf() {
         val uriString = intent.getStringExtra(ShortcutExtras.EXTRA_URI)
             ?: intent.dataString
+        val mimeType = intent.getStringExtra(ShortcutExtras.EXTRA_MIME_TYPE).orEmpty()
 
         if (uriString.isNullOrBlank()) {
             toast(getString(R.string.shortcut_target_missing))
@@ -24,21 +25,22 @@ class OpenPinnedPdfActivity : AppCompatActivity() {
             return
         }
 
-        val pdfUri = Uri.parse(uriString)
+        val fileUri = Uri.parse(uriString)
+        val resolvedMimeType = mimeType.ifBlank { contentResolver.getType(fileUri).orEmpty() }.ifBlank { "*/*" }
         val openIntent = Intent(Intent.ACTION_VIEW).apply {
-            setDataAndType(pdfUri, "application/pdf")
-            clipData = ClipData.newRawUri(intent.getStringExtra(ShortcutExtras.EXTRA_NAME), pdfUri)
+            setDataAndType(fileUri, resolvedMimeType)
+            clipData = ClipData.newRawUri(intent.getStringExtra(ShortcutExtras.EXTRA_NAME), fileUri)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
 
         try {
             startActivity(openIntent)
         } catch (_: SecurityException) {
-            toast(getString(R.string.pdf_permission_missing))
+            toast(getString(R.string.file_permission_missing))
         } catch (_: ActivityNotFoundException) {
-            toast(getString(R.string.no_pdf_viewer))
+            toast(getString(R.string.no_file_viewer))
         } catch (_: Exception) {
-            toast(getString(R.string.pdf_open_failed))
+            toast(getString(R.string.file_open_failed))
         } finally {
             finish()
         }

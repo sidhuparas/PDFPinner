@@ -31,6 +31,7 @@ class DataAdapter(
         fun bind(position: Int) {
             val item = listItems[position]
             binding.filename.text = item.name
+            binding.fileMeta.text = item.typeLabel
             binding.edit.setOnClickListener { showRenameDialog(item) }
         }
 

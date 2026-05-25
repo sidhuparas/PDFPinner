@@ -9,6 +9,7 @@ import android.graphics.drawable.Icon
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.webkit.MimeTypeMap
 import android.provider.OpenableColumns
 import android.view.Menu
 import android.view.MenuItem
@@ -68,7 +69,9 @@ class MainActivity : AppCompatActivity() {
             IconOption(binding.content.iconOptionBlue, R.drawable.pdf),
             IconOption(binding.content.iconOptionCoral, R.drawable.pdf2),
             IconOption(binding.content.iconOptionEmerald, R.drawable.pdf3),
-            IconOption(binding.content.iconOptionCharcoal, R.drawable.pdf4)
+            IconOption(binding.content.iconOptionCharcoal, R.drawable.pdf4),
+            IconOption(binding.content.iconOptionSand, R.drawable.pdf5),
+            IconOption(binding.content.iconOptionGraphite, R.drawable.pdf6)
         )
         iconOptions.forEach { option ->
             option.view.setOnClickListener { selectIcon(option.iconResId) }
@@ -124,17 +127,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openDocumentPicker() {
-        documentPicker.launch(arrayOf("application/pdf"))
+        documentPicker.launch(arrayOf("*/*"))
     }
 
     private fun setItemsFromUris(uris: List<Uri>, persistAccess: Boolean) {
         listItems.clear()
         uris.distinct().forEach { uri ->
             maybePersistReadAccess(uri, persistAccess)
+            val displayName = resolveDisplayName(uri)
+            val mimeType = resolveMimeType(uri, displayName)
             listItems.add(
                 ListItem(
                     uriString = uri.toString(),
-                    name = resolveDisplayName(uri)
+                    name = displayName,
+                    mimeType = mimeType,
+                    typeLabel = buildTypeLabel(mimeType, displayName)
                 )
             )
         }
@@ -171,7 +178,31 @@ class MainActivity : AppCompatActivity() {
         }
 
         val fallback = uri.lastPathSegment?.substringAfterLast('/')?.substringBeforeLast('.', "")
-        return fallback?.takeIf { it.isNotBlank() } ?: "PDF"
+        return fallback?.takeIf { it.isNotBlank() } ?: "File"
+    }
+
+    private fun resolveMimeType(uri: Uri, displayName: String): String {
+        contentResolver.getType(uri)?.let { return it }
+
+        val extension = displayName.substringAfterLast('.', "").lowercase()
+        if (extension.isNotBlank()) {
+            MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)?.let { return it }
+        }
+
+        return "*/*"
+    }
+
+    private fun buildTypeLabel(mimeType: String, displayName: String): String {
+        val extension = displayName.substringAfterLast('.', "").uppercase()
+        val extensionLabel = extension.takeIf { it.isNotBlank() }
+        val category = mimeType.substringBefore('/').replaceFirstChar { it.uppercase() }
+
+        return when {
+            mimeType == "*/*" && extensionLabel != null -> extensionLabel
+            mimeType == "*/*" -> getString(R.string.file_type_generic)
+            extensionLabel != null -> "$extensionLabel · $category"
+            else -> category
+        }
     }
 
     private fun pinSelectedFiles() {
@@ -236,6 +267,7 @@ class MainActivity : AppCompatActivity() {
             clipData = ClipData.newRawUri(item.name, Uri.parse(item.uriString))
             putExtra(ShortcutExtras.EXTRA_URI, item.uriString)
             putExtra(ShortcutExtras.EXTRA_NAME, item.name)
+            putExtra(ShortcutExtras.EXTRA_MIME_TYPE, item.mimeType)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
     }
